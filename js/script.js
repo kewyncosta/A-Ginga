@@ -1,4 +1,4 @@
-const TOTAL_PAGINAS = 16;
+const TOTAL_PAGINAS = 59;
 
 // Configuração do Firebase
 const firebaseConfig = {
@@ -12,9 +12,11 @@ const firebaseConfig = {
 };
 
 // Inicialização do Firebase
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
+if (typeof firebase !== "undefined") {
+  firebase.initializeApp(firebaseConfig);
+}
+const auth = typeof firebase !== "undefined" ? firebase.auth() : null;
+const db = typeof firebase !== "undefined" ? firebase.firestore() : null;
 
 const textosPaginas = {
   1: "Página 1:\n• A Ginga Começa\nMuito antes de Kewyn se tornar conhecido como um dos mais habilidosos ninjas do Clã Ginga, ele era apenas uma criança.\nUm garoto curioso, inquieto e que nunca conseguia ficar parado.\nEle vivia na Vila da Ginga, uma pequena vila ninja escondida entre enormes montanhas e uma floresta cheia de rios.\nDiferente das outras vilas, a Vila da Ginga tinha uma tradição que fazia parte da vida de todos os seus habitantes: a capoeira.\nPara os membros do Clã Ginga, capoeira não era apenas uma dança.\nEra uma arte de combate.\nEra uma maneira de se movimentar.\nEra uma forma de pensar.\nDesde pequenos, os membros do clã aprendiam a gingar antes mesmo de aprenderem a controlar completamente o chakra.\nA primeira lição era simples: Não fique parado diante do perigo.",
@@ -25,19 +27,65 @@ const textosPaginas = {
   6: "Página 6:\n• Rodrigo\nRodrigo era o mais estudioso dos quatro.\nEle usava óculos desde criança e passava muito tempo lendo livros sobre chakra, técnicas ninja e história dos clãs.\nMas existia uma coisa que ele adorava tanto quanto estudar: capoeira.\nRodrigo não tinha a força de Kewyn.\nNão tinha a afinidade natural de Adriely com a água.\nMas tinha uma inteligência impressionante.\nEle observava os movimentos dos outros e tentava descobrir seus padrões.\nDurante um treinamento, Kewyn tentou acertá-lo com um chute.\nRodrigo desviou.\nKewyn atacou novamente.\nRodrigo desviou outra vez.\n— Para de fugir! — reclamou Kewyn.",
   7: "Página 7:\nRodrigo ajeitou os óculos.\n— Eu não estou fugindo.\n— Então está fazendo o quê?\n— Estudando você.\nKewyn ficou confuso.\nRodrigo sorriu.\n— Você sempre começa os ataques usando a perna direita.\nKewyn arregalou os olhos.\n— Como você sabe?\n— Porque eu prestei atenção.\nKewyn ficou em silêncio.\nEntão começou a sorrir.\n— Então vamos ver se você consegue prever o próximo.\nOs dois começaram a lutar novamente.",
   8: "Página 8:\n• Nicolas\nNicolas era completamente diferente de Rodrigo.\nEle era energético.\nCompetitivo.\nE odiava perder.\nQuando treinava, sempre tentava fazer mais uma repetição, mais um chute, mais uma corrida.\n— Eu vou ser o ninja mais rápido da vila! — dizia.\nOs professores riam.\n— Você ainda precisa aprender a controlar seu chakra.\n— Eu vou aprender!\nNicolas tinha uma afinidade natural com o Raiton, o elemento raio.\nMas naquela idade ele ainda não conseguia produzir eletricidade de verdade.\nÀs vezes, durante seus treinamentos, pequenas faíscas apareciam em seus dedos.\nQuando isso acontecia, Nicolas ficava animado.\n— Vocês viram?!",
-  9: "Página 9:\n— Uma faísca que você não consegue fazer!\n— Consigo sim!\n— Então faz!\nKewyn tentava.\nNada acontecia.\nNicolas começava a rir.\n— Hahahaha!\nKewyn ficava irritado.\n— Para de rir!\nAdriely e Rodrigo observavam os dois.\nRodrigo ajeitava os óculos.\n— Vocês dois são crianças.\n— E você também! — responderam Kewyn e Nicolas ao mesmo tempo.",
-  10: "Página 10:\n• O dia da Academia\nAlguns anos se passaram.\nOs quatro chegaram à idade de entrar oficialmente na Academia Ninja.\nAquele era o primeiro passo para se tornarem ninjas.\nNa Academia, aprenderiam:\n- Controle de chakra;\n- Técnicas básicas;\n- Arremesso de kunai;\n- Shuriken;\n- Transformação;\n- Clonagem;\n- Combate corpo a corpo;\n- Estratégia;\n- E, principalmente, controle emocional.",
+  9: "Página 9:\n— Uma faísca que você não consegue fazer!\n— Consigo sim!\n— Então faz!\nKewyn tentava.\nNada aconteceu.\nNicolas começava a rir.\n— Hahahaha!\nKewyn ficava irritado.\n— Para de rir!\nAdriely e Rodrigo observavam os dois.\nRodrigo ajeitava os óculos.\n— Vocês dois são crianças.\n— E você também! — responderam Kewyn e Nicolas ao mesmo tempo.",
+  10: "Página 10:\n• O Dia da Academia\nAlguns anos se passaram.\nOs quatro chegaram à idade de entrar oficialmente na Academia Ninja.\nAquele era o primeiro passo para se tornarem ninjas.\nNa Academia, aprenderiam:\n- Controle de chakra;\n- Técnicas básicas;\n- Arremesso de kunai;\n- Shuriken;\n- Transformação;\n- Clonagem;\n- Combate corpo a corpo;\n- Estratégia;\n- E, principalmente, controle emocional.",
   11: "Página 11:\nMas o Clã Ginga tinha uma matéria especial.\nCombate Ginga.\nEra o treinamento de capoeira usado pelos ninjas do clã.\nO professor entrou na sala.\n— Crianças, hoje vocês começarão o treinamento que decidirá quem está preparado para se tornar um verdadeiro ninja.\nTodos ficaram em silêncio.\nKewyn estava animado.\nNicolas estava sorrindo.\nAdriely estava concentrada.\nRodrigo ajeitou os óculos.\nO professor colocou quatro pequenos objetos sobre a mesa.\n— Cada um de vocês deverá demonstrar controle de chakra.\nKewyn foi o primeiro.\nEle fechou os olhos.\nRespirou.\nTentou concentrar chakra nas mãos.",
   12: "Página 12:\nNada aconteceu.\n— Concentre-se — disse o professor.\nKewyn tentou novamente.\nDessa vez, uma pequena quantidade de chakra apareceu.\nO professor assentiu.\n— Está melhorando.\nDepois foi Adriely.\nEla conseguiu controlar o chakra com facilidade.\nRodrigo também conseguiu.\nNicolas tentou com tanta força que acabou caindo para trás.\nAs crianças começaram a rir.\nNicolas levantou rapidamente.\n— Eu fiz de propósito!\nKewyn começou a rir.\n— Claro que fez.\n— Cala a boca!",
-  13: "Página 13:\n• A primeira missão\nDepois de meses de treinamento, os quatro chegaram ao exame final da Academia.\nEles ainda não eram Genin.\nPrecisavam provar que estavam preparados.\nO exame tinha três partes.\nPrimeiro, uma prova escrita.\nRodrigo terminou rapidamente.\nAdriely foi muito bem.\nKewyn ficou olhando para a folha.\n— Professor...\n— O que foi?",
-  14: "Página 14:\n— Posso desenhar?\n— Não.\nNicolas começou a rir.\nDepois veio a segunda prova.\nArremesso de kunai.\nNicolas foi excelente.\nRodrigo acertou os alvos com precisão.\nAdriely teve um desempenho equilibrado.\nKewyn não foi o melhor no arremesso, mas conseguiu compensar usando sua movimentação.\nFinalmente veio a terceira prova.\nCombate.",
+  13: "Página 13:\n• O Exame Final\nDepois de meses de treinamento, os quatro chegaram ao exame final da Academia.\nEles ainda não eram Genin.\nPrecisavam provar que estavam preparados.\nO exame tinha três partes.\nPrimeiro, uma prova escrita.\nRodrigo terminou rapidamente.\nAdriely foi muito bem.\nKewyn ficou olhando para a folha.\n— Professor...\n— O que foi?\n— Posso desenhar?\n— Não.\nNicolas começou a rir.",
+  14: "Página 14:\nDepois veio a segunda prova.\nArremesso de kunai.\nNicolas foi excelente.\nRodrigo acertou os alvos com precisão.\nAdriely teve um desempenho equilibrado.\nKewyn não foi o melhor no arremesso, mas conseguiu compensar usando sua movimentação.\nFinalmente veio a terceira prova.\nCombate.",
   15: "Página 15:\nKewyn entrou na arena.\nSeu adversário era maior.\nO garoto avançou.\nKewyn gingou.\nEsquerda.\nDireita.\nEsquerda.\nO adversário tentou agarrá-lo.\nKewyn desviou.\nGirou.\nPassou por baixo do braço do garoto.",
-  16: "Página 16:\nE acertou uma rasteira.\nO adversário caiu.\nKewyn ficou parado.\nO professor levantou a mão.\n— Vitória de Kewyn.\nAs crianças comemoraram.\nKewyn sorriu.\nMas o professor não.\nEle estava olhando para os olhos de Kewyn.\nHavia algo diferente naquela linhagem.\nAlgo que ainda estava adormecido."
-};
+  16: "Página 16:\nE acertou uma rasteira.\nO adversário caiu.\nKewyn ficou parado.\nO professor levantou a mão.\n— Vitória de Kewyn.\nAs crianças comemoraram.\nKewyn sorriu.\nMas o professor não.\nEle estava olhando para os olhos de Kewyn.\nHavia algo diferente naquela linhagem.\nAlgo que ainda estava adormecido.",
+  17: "Página 17:\n• O Resultado\nNo final do dia, todos os alunos ficaram reunidos.\nO diretor da Academia apareceu.\n— Vocês aprenderam as primeiras lições de um ninja.\nAlguns passaram.\nOutros precisarão treinar mais.\nKewyn estava nervoso.\nAdriely segurava as mãos.\nRodrigo esperava calmamente.\nNicolas não parava de andar de um lado para o outro.\nEntão os nomes começaram a ser chamados.\n— Adriely: Aprovada.\n— Rodrigo: Aprovado.\n— Nicolas: Aprovado.\nNicolas levantou os braços.\n— EU CONSEGUI!",
+  18: "Página 18:\nFinalmente:\n— Kewyn: Aprovado.\nKewyn olhou para o professor e sorriu.\nNaquele dia, os quatro receberam suas primeiras bandanas.\nEles ainda não eram grandes ninjas, nem Chunin ou Jounin.\nMas aquele era o começo da história dos Quatro da Ginga.\nNaquela noite, Kewyn colocou sua bandana sobre a mesa e prometeu:\n— Um dia... eu vou me tornar forte o suficiente para proteger todo mundo.\nO destino já havia começado a se mover.\nFim do Capítulo 1.",
+  19: "Página 19:\n• Capítulo 2 — Os Quatro Genin\nO dia finalmente havia chegado.\nKewyn, Adriely, Rodrigo e Nicolas não eram mais estudantes da Academia.\nAgora eram Genin.\nPela primeira vez, eles usavam suas bandanas oficialmente como ninjas da Vila da Ginga.\nKewyn caminhava pelas ruas com um sorriso no rosto.\n— Finalmente! — disse ele.\n— Agora começam as missões de verdade!\nNicolas caminhava ao lado dele.\n— Você acha mesmo que vão deixar a gente enfrentar ninjas perigosos logo de cara?\nKewyn colocou as mãos atrás da cabeça.\n— Claro.\nRodrigo, andando alguns passos atrás, ajeitou os óculos.\n— Estatisticamente, não.\nKewyn olhou para ele.\n— Você sempre estraga a diversão.\nAdriely riu.\n— Pelo menos ele está pensando.\n— Eu também penso! — respondeu Kewyn.\nRodrigo olhou para ele.\n— Quando?\nNicolas começou a rir.\n— Essa foi boa!\nKewyn fez uma cara séria.\n— Vocês estão querendo apanhar hoje?\nAdriely entrou no meio dos três.\n— Chega.\nA gente acabou de virar Genin.\nOs quatro continuaram andando.\nNenhum deles sabia que aquele seria o último dia de suas vidas em que seriam apenas crianças brincando de ser ninjas.",
+  20: "Página 20:\n• A Formação da Equipe\nNo mesmo dia, todos os novos Genin foram chamados para a sala principal da Academia.\nO responsável pela formação das equipes entrou.\n— A partir de hoje, vocês trabalharão em grupos de quatro.\nOs alunos ficaram animados.\nKewyn olhou para Nicolas.\n— Tomara que a gente fique junto.\nNicolas respondeu:\n— Se eu ficar com você, vou ter que salvar você toda hora.\n— Você não conseguiria.\n— Quer testar?\nAdriely começou a rir.\nRodrigo apenas observava.\nOs nomes começaram a ser chamados.\nAté que o professor anunciou:\n— Equipe Ginga... Kewyn, Adriely, Rodrigo e Nicolas.\nOs quatro ficaram em silêncio por um segundo.\nEntão Kewyn abriu um sorriso enorme.\n— A GENTE FICOU JUNTO!\nNicolas levantou o braço.\n— Sabia!\nAdriely sorriu.\nRodrigo ajeitou os óculos.\n— Isso pode funcionar.\nNaquele momento, os quatro se tornaram oficialmente uma equipe.\nMas ainda faltava uma pessoa.\nO líder.",
+  21: "Página 21:\n• O Mestre\nNo dia seguinte, os quatro estavam sentados na sala esperando seu novo mestre.\nPassaram dez minutos.\nDepois vinte.\nDepois quarenta.\nNicolas estava irritado.\n— Esse cara está atrasado.\nKewyn estava sentado em cima da mesa.\n— Talvez ele tenha medo da gente.\nRodrigo respondeu:\n— Ou talvez esteja testando nossa paciência.\nAdriely olhou para a porta.\n— Acho que ele já está aqui.\nOs três olharam para ela.\n— Como assim?\nAdriely apontou para o teto.\nUma sombra apareceu.\nUm homem estava sentado tranquilamente em cima de uma viga.\n— Finalmente perceberam.\nKewyn levantou rapidamente.\n— Quem é você?!\nO homem pulou no chão.\nEle usava uma roupa tradicional do Clã Ginga, mas com algumas modificações.\nTinha uma faixa escura na cintura e várias marcas de treinamento nos braços.\n— Meu nome é Mestre Jairo.\nKewyn cruzou os braços.\n— Você chegou atrasado.\nJairo sorriu.\n— E você é o garoto que fala demais.\nNicolas começou a rir.\nKewyn olhou para ele.\n— Para de rir.\nJairo colocou as mãos na cintura.\n— Amanhã teremos o primeiro teste.\nRodrigo perguntou:\n— Que teste?\n— Vocês descobrirão.",
+  22: "Página 22:\n• O Teste da Ginga\nNa manhã seguinte, os quatro chegaram a uma área aberta da floresta.\nJairo colocou quatro pequenos sinos presos à cintura.\nKewyn olhou para eles.\n— É só pegar os sinos?\n— Exatamente.\nNicolas sorriu.\n— Fácil.\nJairo olhou para os quatro.\n— Existe apenas uma regra.\nEle apontou para os sinos.\n— Vocês têm até o meio-dia.\nKewyn perguntou:\n— E se conseguirmos?\nJairo respondeu:\n— Vocês continuam como uma equipe.\nRodrigo percebeu algo.\n— E se não conseguirmos?\nJairo sorriu.\n— Vocês voltarão para a Academia.\nOs quatro ficaram sérios.\nO teste começou.",
+  23: "Página 23:\n• Kewyn e Adriely Atacam\nKewyn foi o primeiro.\nEntrou em posição de ginga.\n— Eu vou pegar esse sino.\nEle avançou.\nJairo desapareceu.\nKewyn arregalou os olhos.\n— O quê?!\nJairo apareceu atrás dele.\n— Lento.\nKewyn se virou, tentou uma rasteira e um chute, mas Jairo desviou.\n— Você tem talento — disse o mestre.\n— Mas está atacando sem pensar.\nKewyn recuou para observar.\nAdriely se aproximou devagar e colocou as mãos na direção de um pequeno riacho.\nA água se levantou e circulou pelo seu corpo enquanto ela gingava.\nEla tentou prender Jairo com uma corrente líquida, mas ele escapou.\n— Você controla bem o elemento.\n— Ainda estou aprendendo.\n— Isso é bom.",
+  24: "Página 24:\n• Rodrigo Observa\nEnquanto Kewyn e Adriely atacavam, Rodrigo permanecia escondido.\nNicolas perguntou:\n— Você não vai fazer nada?\n— Estou esperando uma oportunidade.\nRodrigo analisou o terreno: árvores, pedras, sombra, distância e a direção do vento.\nPercebeu que Jairo nunca observava os arredores.\n— Agora.\nRodrigo correu e tentou pegar o sino, mas Jairo segurou seu braço.\n— Você é inteligente, mas ainda é previsível.\nJairo o lançou para longe.\nRodrigo caiu no chão.\n— Isso doeu.",
+  25: "Página 25:\n• Nicolas e o Primeiro Raio\nNicolas respirou fundo e começou a gingar.\nSeu chakra começou a circular e pequenas faíscas apareceram em suas mãos.\n— Raiton? — percebeu Jairo.\nNicolas concentrou chakra nas pernas e disparou numa pequena descarga elétrica.\nBUM!\nNicolas reapareceu diante de Jairo, que bloqueou o golpe surpreso.\n— Sua velocidade aumentou.\nNicolas girou no ar com o pé coberto por faíscas:\n— Ginga Relâmpago!\nO chute passou raspando.\nJairo sorriu:\n— Você ainda precisa aprender a controlar essa velocidade.",
+  26: "Página 26:\n• O Verdadeiro Objetivo\nOs quatro estavam cansados.\nKewyn percebeu que ninguém conseguiria sozinho.\n— Pessoal! Vamos trabalhar juntos.\nKewyn explicou o plano e os quatro avançaram unidos.\nKewyn atacou pela frente, Nicolas pela lateral e Adriely levantou uma parede de água.\nJairo mudou de direção e caiu na armadilha de Rodrigo.\nAo se virar, Adriely congelou uma pequena parte do chão.\nJairo perdeu o equilíbrio por um instante.\nKewyn entrou em ginga, girou e arrancou um dos sinos.\nCLIN!\nJairo começou a rir:\n— O teste nunca foi sobre pegar os sinos.\n— Era sobre trabalho em equipe — entendeu Rodrigo.",
+  27: "Página 27:\n• O Começo da Equipe\nJairo retirou os outros três sinos.\n— Nenhum de vocês teria conseguido sozinho.\nKewyn tem talento, mas precisa pensar antes de atacar.\nAdriely possui um chakra extraordinário, mas precisa descobrir o limite do seu poder.\nRodrigo possui uma mente capaz de enxergar detalhes imperceptíveis.\nE Nicolas possui uma velocidade perigosa, mas se não controlar o Raiton, o próprio corpo será destruído.\nJairo olhou para os quatro:\n— A partir de hoje, vocês são oficialmente uma equipe.\nOs quatro colocaram as mãos juntas:\n— Equipe Ginga!",
+  28: "Página 28:\n• A Primeira Missão\nAlguns dias depois, receberam a primeira missão oficial: acompanhar o comerciante Senji até uma vila próxima.\nKewyn ficou decepcionado:\n— Só isso?\nJairo respondeu:\n— Todo ninja começa pelas missões simples.\nNicolas perguntou quando enfrentariam inimigos de verdade.\nJairo sorriu:\n— Quando estiverem preparados.\nOs quatro começaram a caminhar.\nNenhum deles sabia que aquela missão mudaria suas vidas.",
+  29: "Página 29:\n• A Sombra na Floresta\nNaquela estrada, alguém já estava observando a equipe.\nUma figura escondida entre as árvores manteve os olhos fixos em Kewyn e seus olhos castanhos.\n— Então... — a figura sorriu.\n— O sangue do Clã Ginga ainda existe.\nE desapareceu na floresta.\nContinua...\nFim do Capítulo 2.",
+  30: "Página 30:\n• Capítulo 3 — A Primeira Missão\nA manhã estava começando quando Kewyn, Adriely, Rodrigo e Nicolas deixaram a Vila da Ginga.\nEra a primeira missão oficial da Equipe Ginga.\nKewyn caminhava na frente, com as mãos atrás da cabeça.\n— Eu ainda acho essa missão muito fácil.\nNicolas caminhava ao lado dele.\n— Eu também.\nA gente deveria estar enfrentando alguém.\nRodrigo ajeitou os óculos.\n— Vocês dois precisam entender que uma missão não precisa envolver combate para ser importante.\nKewyn olhou para trás.\n— Você fala igual ao Mestre Jairo.\n— Talvez porque ele esteja certo.\nAdriely riu.\n— Vocês vão discutir durante a viagem inteira?\n— Não — responderam Kewyn e Nicolas ao mesmo tempo.\nRodrigo suspirou.\n— Eu sabia.",
+  31: "Página 31:\n• A Missão\nMais atrás, o Mestre Jairo observava os quatro em silêncio.\nEle parecia tranquilo, mas seus olhos estavam atentos a tudo.\nO objetivo era simples: um comerciante chamado Senji precisava levar mercadorias até uma pequena vila do outro lado da floresta.\nNão parecia perigoso.\nNenhum criminoso conhecido estava na região.\nSenji caminhava ao lado de Jairo.\n— Obrigado por aceitarem a missão — disse o comerciante.\nKewyn respondeu:\n— Não precisa agradecer.\nNós somos ninjas!\nNicolas perguntou:\n— Tem certeza de que não existe nada perigoso por aqui?\nSenji pensou por alguns segundos:\n— Há alguns dias, alguns comerciantes disseram ter visto pessoas estranhas na floresta.\nJairo imediatamente ficou sério.",
+  32: "Página 32:\n• A Floresta\nDepois de algumas horas de caminhada, a equipe entrou em uma região mais fechada da floresta.\nAs árvores eram enormes e a luz do sol quase não chegava ao chão.\nOs sons dos pássaros desapareceram.\nKewyn parou.\n— Está muito quieto.\nAdriely olhou ao redor.\n— Também percebi.\nRodrigo fechou os olhos por alguns segundos.\n— Não estou ouvindo animais.\nNicolas colocou a mão sobre uma kunai.\n— Então tem alguma coisa errada.\nJairo levantou a mão e todos pararam.\n— Ninguém se separa.\nJairo olhou para as árvores:\n— Estamos sendo observados.",
+  33: "Página 33:\n• A Emboscada\nUm som veio das árvores.\nTCHAK!\nUma kunai passou perto do rosto de Kewyn.\n— CUIDADO!\nAdriely puxou Kewyn para o lado e a kunai acertou uma árvore.\nNicolas entrou em posição de combate:\n— Finalmente!\nJairo gritou:\n— Formação!\nOs quatro se posicionaram: Kewyn na frente, Adriely ao lado, Rodrigo atrás e Nicolas na lateral.\nTrês homens surgiram entre as árvores usando roupas escuras.\n— Entreguem as mercadorias.\nKewyn deu um passo à frente:\n— E se a gente não entregar?\n— Então vamos pegar.",
+  34: "Página 34:\n• A Primeira Luta de Verdade\nKewyn entrou em ginga.\nO inimigo correu diretamente contra ele.\nKewyn desviou para a esquerda, abaixou o corpo e tentou uma rasteira.\nO inimigo pulou.\nKewyn girou no chão e atacou com um chute.\nTUM!\nO homem bloqueou e Kewyn recuou:\n— Ele é forte.\nNicolas apareceu atrás com pequenas faíscas nos braços:\n— Então deixa comigo!\nCRACK!\nNicolas disparou, mas o inimigo desviou e ele passou direto:\n— Droga!\nRodrigo gritou:\n— Nicolas! Ele está esperando você avançar em linha reta!\nNicolas começou a gingar alternando os lados enquanto as faíscas aumentavam.",
+  35: "Página 35:\n• A Água de Adriely\nEnquanto Nicolas enfrentava um dos inimigos, outro tentou atacar Adriely.\nEla recuou e colocou a mão na direção de uma pequena poça de água.\nA água se levantou.\nAdriely movimentou o braço e a água se transformou em uma espécie de chicote.\nSHAA!\nO golpe atingiu o chão diante do inimigo, que recuou.\nAdriely entrou em ginga.\nA água acompanhava cada movimento de seu corpo.\nEla girava, a água girava.\nEla avançava, a água avançava.",
+  36: "Página 36:\n• O Despertar do Gelo\nO inimigo tentou agarrar Adriely.\nEla desviou e tocou o chão com a mão.\nA água congelou instantaneamente.\nCRAAACK!\nUma camada de gelo surgiu no chão e o homem perdeu o equilíbrio.\nAdriely ficou surpresa ao olhar para o próprio chakra:\n— Eu... consegui congelar.\nJairo observou de longe com olhos sérios:\n— Então o gelo começou a despertar...",
+  37: "Página 37:\n• Rodrigo Percebe\nRodrigo percebeu algo estranho: os três inimigos não estavam tentando vencer, mas sim separar a equipe.\nUm atacava Kewyn, outro ocupava Adriely e o terceiro evitava Nicolas.\n— Eles estão fazendo isso de propósito — analisou Rodrigo.\nEle olhou para o mestre:\n— Mestre Jairo! Eles não querem as mercadorias.\nSe quisessem, já teriam atacado o comerciante.\nEles querem alguma outra coisa.\nUm dos inimigos ouviu e mudou de expressão.\nRodrigo confirmou:\n— Eu estava certo.",
+  38: "Página 38:\n• O Alvo\nDe repente, um dos homens desapareceu.\nJairo virou imediatamente:\n— Kewyn!\nO inimigo foi direto na direção de Kewyn e agarrou seu braço.\n— Peguei você!\nKewyn tentou escapar.\nO homem olhou diretamente nos olhos de Kewyn e ficou assustado por um instante:\n— Esses olhos...\n— O quê? — perguntou Kewyn.\nO homem soltou seu braço e recuou assustado:\n— Não pode ser... O herdeiro...",
+  39: "Página 39:\n• A Fuga dos Inimigos\nJairo apareceu entre os dois.\nBUM!\nO inimigo foi lançado para longe.\nJairo ficou na frente de Kewyn:\n— Não encoste nele.\nO inimigo se levantou e seu companheiro gritou:\n— Vamos embora!\nOs três começaram a fugir.\nNicolas tentou persegui-los, mas Jairo segurou seu ombro:\n— Não.\nNão sabemos quantos existem.\nRodrigo olhou para a floresta:\n— E eles conseguiram o que queriam... Ver você.",
+  40: "Página 40:\n• As Dúvidas de Kewyn\nA missão continuou e os inimigos desapareceram.\nAdriely e Nicolas olhavam para Kewyn.\n— Por que todo mundo está olhando para mim? — perguntou Kewyn.\n— Eles falaram alguma coisa sobre você — disse Adriely.\nKewyn ficou pensativo:\n— Eu não entendi.\nJairo interrompeu:\n— Chega.\nA missão ainda não terminou.\nMas a cabeça de Kewyn continuava cheia de perguntas.\nPor que ficaram assustados com seus olhos?\nE o que significava a palavra 'herdeiro'?",
+  41: "Página 41:\n• O Retorno\nAo chegarem à vila, Senji agradeceu à equipe:\n— Vocês salvaram minha mercadoria.\nJairo entregou o relatório da missão.\nO responsável pela vila ficou sério ao ler:\n— Vocês encontraram homens desconhecidos? E eles mencionaram o Clã Ginga?\nJairo respondeu em silêncio:\n— Sim.\n— Então essa missão não foi tão simples quanto parecia.\nKewyn, atrás da porta, ouviu tudo e começou a se preocupar.",
+  42: "Página 42:\n• A Noite\nNaquela noite, Kewyn não conseguiu dormir.\nEle caminhou até o campo de treinamento e parou diante de um lago.\nOlhou para o próprio reflexo.\nSeus olhos continuavam normais, castanhos.\nSem Byakugan, sem qualquer poder especial aparente.\nEle tocou o próprio rosto:\n— O que tem de tão especial nos meus olhos?",
+  43: "Página 43:\n• O Primeiro Sinal\nDe repente, uma pequena dor surgiu atrás de seu olho esquerdo.\nKewyn fechou os olhos:\n— Ai...\nA dor desapareceu rapidamente.\nEle abriu os olhos e tudo estava normal.\n— Deve ser só cansaço — murmurou.\nEle não sabia, mas seu corpo dava os primeiros sinais.",
+  44: "Página 44:\n• O Destino se Move\nNa mesma noite, muito longe dali, a figura que havia observado a equipe estava diante de uma fogueira com um homem mais velho.\n— Você encontrou o garoto?\n— Sim. Ele ainda não despertou.\n— Então temos tempo.\n— Quanto tempo?\nO homem levantou os olhos:\n— Até o primeiro sinal do Byakugan.\nA fogueira estalou: CREC.\nO poder de Kewyn ainda estava adormecido, mas não ficaria assim para sempre.\nContinua...\nFim do Capítulo 3.",
+  45: "Página 45:\n• Capítulo 4 — A Primeira Tempestade\nA manhã havia chegado silenciosa à Vila da Ginga.\nDepois da primeira missão como Genin, Kewyn, Adriely, Rodrigo e Nicolas estavam começando a entender o que significava fazer parte de uma verdadeira equipe.\nEles ainda eram jovens.\nAinda cometiam erros.\nAinda discutiam por coisas pequenas.\nMas alguma coisa havia mudado.\nEles já não treinavam apenas como quatro crianças.\nAgora treinavam como ninjas.\nE o Mestre Jairo sabia que estava na hora de testar até onde eles realmente poderiam chegar.",
+  46: "Página 46:\n• A Notícia\nKewyn estava no campo de treinamento praticando sua ginga.\n— Mais uma vez! — gritou Nicolas.\nOs dois começaram a lutar.\nNicolas avançava rapidamente, enquanto Kewyn usava a ginga para escapar dos ataques.\n— Você está ficando mais rápido! — disse Kewyn.\nPequenas faíscas apareceram nos pés de Nicolas.\n— Você está usando Raiton de novo? — perguntou Kewyn.\n— Só um pouquinho.\nAfonso, Adriely treinava seu controle de água e Rodrigo lia numa pedra.\nJairo apareceu:\n— Temos uma missão.\nJairo entregou um pergaminho a Rodrigo:\n— Uma pequena vila ao norte perdeu contato com alguns comerciantes.\nPrecisamos descobrir o motivo.",
+  47: "Página 47:\n• A Estrada do Norte\nHoras depois, os cinco deixaram a Vila da Ginga.\nA floresta era densa e o caminho ficava cada vez mais estreito.\nKewyn caminhava na frente:\n— Eu não estou sentindo nada.\nRodrigo ajeitou os óculos:\n— Esse é justamente o problema.\nSe alguém estivesse nos observando, você provavelmente não perceberia.\nAdriely olhou para os lados:\n— Então vamos ficar atentos.\nNicolas colocou a mão perto da cintura:\n— Se aparecer alguém, eu resolvo.\nJairo alertou:\n— Um ninja que ataca sem pensar pode colocar toda a equipe em perigo.",
+  48: "Página 48:\n• A Vila Abandonada\nDepois de algumas horas, chegaram à vila.\nO lugar estava completamente silencioso, sem pessoas nas ruas.\nJairo fez um sinal:\n— Formação.\nOs quatro se posicionaram: Rodrigo atrás, Adriely à esquerda, Nicolas à direita e Kewyn na frente.\nEles encontraram uma carroça destruída e marcas de luta no chão.\nRodrigo observou as pegadas:\n— Três pessoas.\nUma era mais pesada, outra corria e a terceira não deixou pegadas.\nJairo ficou sério:\n— Todos para trás.\nUma kunai passou voando.\nCLANG!\nJairo desviou a arma:\n— Ataque!",
+  49: "Página 49:\n• A Batalha Começa\nKewyn entrou imediatamente em ginga.\nUm dos inimigos avançou com uma espada e Kewyn desviou.\nEle colocou uma mão no chão e girou as pernas numa Rasteira da Ginga.\nO inimigo caiu.\nOutro adversário veio por trás:\n— Kewyn! — avisou Adriely.\nEla levantou as mãos e usou o Jutsu da Ginga: Corrente Circular.\nA água de um riacho próximo subiu, atingiu o inimigo e o empurrou para longe.\n— Valeu! — disse Kewyn.\n— Não se distraia! — respondeu Adriely.",
+  50: "Página 50:\n• Rodrigo contra Dois\nRodrigo estava cercado por dois inimigos que avançavam ao mesmo tempo.\nEle recuou, desviou de um soco e abaixou de outro golpe.\nRodrigo começou a gingar.\nOs dois inimigos ficaram confusos:\n— O que ele está fazendo?\n— Observando — respondeu Rodrigo.\nEle percebeu o padrão de ataque dos dois.\nEsperou o momento certo, desviou do primeiro e fez o segundo acertar o próprio companheiro.\nRodrigo ajeitou os óculos:\n— Funcionou.\nExatamente como imaginei.",
+  51: "Página 51:\n• Nicolas Libera o Raio\nNicolas enfrentava um inimigo muito mais rápido e ficava irritado por não conseguir acertar.\n— Para de fugir!\nNicolas apertou os punhos e o chakra começou a percorrer seu corpo.\nFaíscas surgiram por toda parte.\nCRACK!\nEle avançou com a Ginga Raiton, usando uma velocidade muito maior.\nNicolas passou pelo inimigo, girou e acertou um chute forte, lançando-o contra uma árvore.\nNicolas ficou parado, respirando pesado:\n— Eu consegui...",
+  52: "Página 52:\n• O Controle do Chakra\nJairo gritou de longe:\n— Nicolas! Controle o chakra!\nNicolas olhou para as próprias mãos enquanto as faíscas aumentavam descontroladamente:\n— Eu não consigo parar!\nJairo correu até ele:\n— Respire!\nNicolas fechou os olhos, inspirou e expirou até as faíscas diminuírem.\nJairo colocou a mão em seu ombro:\n— Seu Raiton é poderoso, mas primeiro precisa aprender a não ser destruído pelo próprio poder.",
+  53: "Página 53:\n• O Inimigo Escondido\nOs quatro inimigos estavam derrotados, mas Rodrigo apontou para as árvores:\n— Tem alguém observando.\nJairo percebeu no mesmo instante:\n— Todos para trás!\nUma presença surgiu no alto de uma árvore: um homem usando uma máscara escura.\nEle apenas olhou fixamente para os olhos de Kewyn.\nKewyn sentiu um arrepio:\n— Quem é você?\n— Então você é o garoto... O último herdeiro — disse o mascarado.\nJairo ficou sério:\n— Não diga mais nada.",
+  54: "Página 54:\n• A Fumaça\nO mascarado olhou para Jairo:\n— Você sabe do que estou falando.\nKewyn ficou confuso:\n— Mestre?\nO homem fez alguns selos com as mãos:\n— Nós vamos nos encontrar novamente.\nUma densa fumaça tomou conta da área.\nQuando a fumaça desapareceu, o mascarado havia sumido sem deixar vestígios.",
+  55: "Página 55:\n• O Segredo de Jairo\nKewyn virou-se para Jairo:\n— Mestre, o que ele quis dizer?\n— Nada — respondeu Jairo.\nKewyn franziu a testa:\n— Não foi nada.\nEle falou de mim!\nNicolas perguntou quem era aquele cara.\nJairo olhou para os quatro:\n— Ainda não é hora de vocês saberem, porque vocês ainda são Genin.\nKewyn perguntou quando deixariam de ser.\n— Quando estiverem preparados para descobrir coisas que talvez preferissem nunca saber — respondeu o mestre.",
+  56: "Página 56:\n• As Perguntas sem Resposta\nA missão terminou e os comerciantes foram encontrados seguros numa casa subterrânea.\nAo voltarem para a Vila da Ginga, todos comemoraram o sucesso da missão.\nMas para Kewyn tudo era diferente.\nNaquela noite, ele sentou-se sozinho no telhado de sua casa olhando o céu.\nSeus olhos continuavam castanhos e normais, sem sinal de poder.\nEle tocou o rosto:\n— Último herdeiro... As palavras não saíam de sua cabeça.",
+  57: "Página 57:\n• As Palavras do Mestre\nJairo sentou ao lado de Kewyn no telhado.\n— Tem alguma coisa errada comigo? — perguntou Kewyn.\n— Não.\n— Então por que aquele homem me chamou de herdeiro?\nJairo respirou fundo:\n— Porque existe uma história sobre sua família que você ainda não conhece.\nJairo se levantou para ir embora.\n— E quando vai chegar a hora de saber?! — perguntou Kewyn.\nSem olhar para trás, Jairo respondeu:\n— Quando seus olhos estiverem prontos para enxergar.",
+  58: "Página 58:\n• O Acompanhamento nas Sombras\nLonge da vila, o homem mascarado caminhava por uma floresta escura até encontrar outro homem.\n— Você encontrou o garoto?\n— Sim. O poder ainda está adormecido.\n— Então por que não o matou?\nO mascarado sorriu:\n— Porque eu quero ver até onde ele consegue chegar.\n— E quando ele despertar?\nO mascarado olhou para a lua:\n— Então teremos nosso verdadeiro inimigo.",
+  59: "Página 59:\n• O Despertar Futuro\nNa Vila da Ginga, Kewyn finalmente fechou os olhos.\nEle ainda era apenas um Genin de oito anos e não possuía o Byakugan nem conhecia o poder de sua família.\nMas uma história antiga estava voltando.\nDentro de seus olhos castanhos, um poder ancestral esperava pelo momento certo para despertar.\nContinua...\nFim do Capítulo 4 — A Primeira Tempestade.",
 
+
+
+
+};
 const paginas = [];
 for (let i = 1; i <= TOTAL_PAGINAS; i++) {
-  paginas.push(`../images/imagens${i}.png`);
+  paginas.push(`./images/imagens${i}.png`);
 }
 
 let usuarioAtual = null;
@@ -62,6 +110,13 @@ if (totalPagesElement) {
   totalPagesElement.textContent = TOTAL_PAGINAS;
 }
 
+// Trata erro de imagem não carregada sem quebrar a tela
+if (imgElement) {
+  imgElement.onerror = function () {
+    console.warn(`Imagem não encontrada para a página ${indiceAtual + 1}`);
+  };
+}
+
 function obterOuCriarIdDispositivo() {
   let deviceId = localStorage.getItem("leitor_device_id");
   if (!deviceId) {
@@ -72,7 +127,7 @@ function obterOuCriarIdDispositivo() {
 }
 
 // LOGIN GOOGLE
-if (googleLoginBtn) {
+if (googleLoginBtn && auth) {
   googleLoginBtn.onclick = async function (e) {
     e.preventDefault();
     const provider = new firebase.auth.GoogleAuthProvider();
@@ -113,58 +168,60 @@ if (guestBtn) {
   };
 }
 
-// MONITOR DO FIREBASE AUTH (CORRIGIDO PARA EVITAR O LOOP)
-auth.onAuthStateChanged(async (user) => {
-  if (user) {
-    usuarioAtual = user;
-    modoVisitante = false;
+// MONITOR DO FIREBASE AUTH
+if (auth) {
+  auth.onAuthStateChanged(async (user) => {
+    if (user) {
+      usuarioAtual = user;
+      modoVisitante = false;
 
-    // ESCONDE A TELA INICIAL NA HORA (Evita voltar pro "Seja Bem-vindo")
-    if (welcomeModal) welcomeModal.classList.add("hidden");
+      if (welcomeModal) welcomeModal.classList.add("hidden");
 
-    let paginaSalva = 1;
+      let paginaSalva = 1;
 
-    try {
-      const userRef = db.collection("leitores").doc(user.uid);
-      const userDoc = await userRef.get();
+      if (db) {
+        try {
+          const userRef = db.collection("leitores").doc(user.uid);
+          const userDoc = await userRef.get();
 
-      if (userDoc.exists) {
-        paginaSalva = userDoc.data().paginaAtual || 1;
-      } else {
-        await userRef.set({
-          nome: user.displayName || "Leitor",
-          email: user.email || "",
-          paginaAtual: 1
-        });
+          if (userDoc.exists) {
+            paginaSalva = userDoc.data().paginaAtual || 1;
+          } else {
+            await userRef.set({
+              nome: user.displayName || "Leitor",
+              email: user.email || "",
+              paginaAtual: 1
+            });
+          }
+        } catch (err) {
+          console.error("Erro ao acessar Firestore:", err);
+        }
       }
-    } catch (err) {
-      console.error("Erro ao acessar Firestore:", err);
+
+      const userText = document.getElementById("welcome-user-text");
+      if (userText) {
+        userText.textContent = `OLÁ, ${user.displayName ? user.displayName.toUpperCase() : 'LEITOR'}!`;
+      }
+
+      const continueBtnCap1 = document.getElementById("continue-btn");
+      if (continueBtnCap1) {
+        continueBtnCap1.textContent = paginaSalva > 1 ? "CONTINUAR LENDO ▶" : "COMEÇAR LEITURA ▶";
+        continueBtnCap1.onclick = () => abrirLeitor(paginaSalva - 1);
+      }
+
+      const cap1Status = document.getElementById("progress-status");
+      if (cap1Status) cap1Status.textContent = `Página ${paginaSalva} de ${TOTAL_PAGINAS}`;
+
+      if (continueModal) continueModal.classList.remove("hidden");
+
+    } else if (!modoVisitante) {
+      if (welcomeModal) welcomeModal.classList.remove("hidden");
+      if (continueModal) continueModal.classList.add("hidden");
     }
+  });
+}
 
-    // Atualiza a tela de seleção de capítulos
-    const userText = document.getElementById("welcome-user-text");
-    if (userText) {
-      userText.textContent = `OLÁ, ${user.displayName ? user.displayName.toUpperCase() : 'LEITOR'}!`;
-    }
-
-    const continueBtnCap1 = document.getElementById("continue-btn");
-    if (continueBtnCap1) {
-      continueBtnCap1.textContent = paginaSalva > 1 ? "CONTINUAR LENDO ▶" : "COMEÇAR LEITURA ▶";
-      continueBtnCap1.onclick = () => abrirLeitor(paginaSalva - 1);
-    }
-
-    const cap1Status = document.getElementById("progress-status");
-    if (cap1Status) cap1Status.textContent = `Página ${paginaSalva} de ${TOTAL_PAGINAS}`;
-
-    if (continueModal) continueModal.classList.remove("hidden");
-
-  } else if (!modoVisitante) {
-    if (welcomeModal) welcomeModal.classList.remove("hidden");
-    if (continueModal) continueModal.classList.add("hidden");
-  }
-});
-
-// ABRIR O LEITOR NA PÁGINA SELECIONADA
+// ABRIR O LEITOR
 function abrirLeitor(indicePagina) {
   indiceAtual = indicePagina;
   if (continueModal) continueModal.classList.add("hidden");
@@ -173,17 +230,17 @@ function abrirLeitor(indicePagina) {
 
 // SALVAR PROGRESSO
 function salvarProgressoAutomatico(numeroPagina) {
-  if (usuarioAtual && !modoVisitante) {
-    db.collection("leitores").doc(usuarioAtual.uid).update({
+  if (usuarioAtual && !modoVisitante && db) {
+    db.collection("leitores").doc(usuarioAtual.uid).set({
       paginaAtual: numeroPagina
-    }).catch(err => console.error("Erro ao salvar progresso:", err));
+    }, { merge: true }).catch(err => console.error("Erro ao salvar progresso:", err));
   } else {
     const deviceId = obterOuCriarIdDispositivo();
     localStorage.setItem(`pagina_${deviceId}`, numeroPagina);
   }
 }
 
-// ATUALIZAR INTERFACE DO LEITOR
+// ATUALIZAR INTERFACE
 function atualizarPagina() {
   const numeroPaginaAtual = indiceAtual + 1;
 
@@ -191,16 +248,23 @@ function atualizarPagina() {
   if (pageNumElement) pageNumElement.textContent = numeroPaginaAtual;
 
   if (pageTextElement) {
-    pageTextElement.textContent = textosPaginas[numeroPaginaAtual] || "Sem transcrição de texto para esta página.";
+    pageTextElement.innerText = textosPaginas[numeroPaginaAtual] || "Sem transcrição de texto para esta página.";
   }
 
+  // Atualiza botões
   if (nextBtn) nextBtn.disabled = indiceAtual === 0;
   if (prevBtn) prevBtn.disabled = indiceAtual === paginas.length - 1;
+
+  // Atualiza ícones visuais adicionais se existirem no HTML
+  const statusIcon = document.getElementById("status-icon");
+  if (statusIcon) {
+    statusIcon.classList.toggle("active", numeroPaginaAtual > 1);
+  }
 
   salvarProgressoAutomatico(numeroPaginaAtual);
 }
 
-// CONTROLES DE NAVEGAÇÃO
+// BOTÕES DE NAVEGAÇÃO
 if (prevBtn) {
   prevBtn.addEventListener("click", () => {
     if (indiceAtual < paginas.length - 1) {
@@ -219,12 +283,13 @@ if (nextBtn) {
   });
 }
 
+// TECLADO
 document.addEventListener("keydown", (e) => {
-  if (e.key === "ArrowLeft" && prevBtn) prevBtn.click();
-  if (e.key === "ArrowRight" && nextBtn) nextBtn.click();
+  if (e.key === "ArrowLeft" && nextBtn) nextBtn.click();
+  if (e.key === "ArrowRight" && prevBtn) prevBtn.click();
 });
 
-// NAVEGAÇÃO POR SWIPE (TOUCH)
+// GESTOS DE SWIPE (TOUCH)
 let touchStartX = 0;
 let touchEndX = 0;
 

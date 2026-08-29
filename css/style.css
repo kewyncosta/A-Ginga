@@ -40,7 +40,8 @@ body {
   pointer-events: auto;
 }
 
-.modal-overlay.hidden {
+.modal-overlay.hidden,
+.hidden {
   display: none !important;
   pointer-events: none !important;
 }
@@ -82,11 +83,11 @@ body {
   width: 100%;
   margin-top: 5px;
 }
+
 /* ==========================================
-   BOTÕES DA MODAL INICIAL (DESIGN IDÊNTICO)
+   BOTÕES DA MODAL INICIAL
    ========================================== */
 
-/* Aplica o estilo escuro/laranja para QUALQUER botão da modal */
 .modal-actions button,
 .btn-google,
 .btn-guest,
@@ -109,14 +110,11 @@ body {
   box-sizing: border-box !important;
   outline: none !important;
   text-decoration: none !important;
-
-  /* FUNDO ESCURO, TEXTO LARANJA E BORDA LARANJA (IGUAL AO VISITANTE) */
   background-color: transparent !important;
   color: #ff8533 !important;
   border: 2px solid #ff6b00 !important;
 }
 
-/* Efeito ao passar o mouse em ambos os botões */
 .modal-actions button:hover,
 .btn-google:hover,
 .btn-guest:hover,
@@ -126,7 +124,6 @@ body {
   color: #ffffff !important;
 }
 
-/* Efeito de clique (pressionar) */
 .modal-actions button:active,
 .btn-google:active,
 .btn-guest:active,
@@ -305,8 +302,25 @@ header {
   font-size: 0.95rem;
   line-height: 1.5;
   color: #dddddd;
-  white-space: pre-line;
+  white-space: pre-wrap;
   padding-right: 5px;
+}
+
+/* Scrollbar Personalizada */
+.text-content::-webkit-scrollbar,
+.books-shelf::-webkit-scrollbar {
+  width: 6px;
+}
+
+.text-content::-webkit-scrollbar-track,
+.books-shelf::-webkit-scrollbar-track {
+  background: #141419;
+}
+
+.text-content::-webkit-scrollbar-thumb,
+.books-shelf::-webkit-scrollbar-thumb {
+  background: #ff6b00;
+  border-radius: 4px;
 }
 
 .controls {
@@ -378,7 +392,7 @@ header {
   }
 
   .text-panel {
-    max-height: 25vh;
+    max-height: 30vh;
   }
 
   .book-card {
