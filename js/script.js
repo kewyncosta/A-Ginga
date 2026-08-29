@@ -71,7 +71,7 @@ function obterOuCriarIdDispositivo() {
   return deviceId;
 }
 
-// LOGIN GOOGLE (Uso de Popup para evitar loop no redirecionamento)
+// LOGIN GOOGLE
 if (googleLoginBtn) {
   googleLoginBtn.onclick = async function (e) {
     e.preventDefault();
@@ -92,14 +92,14 @@ if (guestBtn) {
   guestBtn.onclick = function (e) {
     e.preventDefault();
     modoVisitante = true;
-    welcomeModal.classList.add("hidden");
+    if (welcomeModal) welcomeModal.classList.add("hidden");
 
     const deviceId = obterOuCriarIdDispositivo();
     const paginaSalvaLocal = parseInt(localStorage.getItem(`pagina_${deviceId}`)) || 1;
 
-    document.getElementById("welcome-user-text").textContent = "OLÁ, VISITANTE!";
-    
-    // Atualiza botão do Capítulo 1
+    const userText = document.getElementById("welcome-user-text");
+    if (userText) userText.textContent = "OLÁ, VISITANTE!";
+
     const continueBtnCap1 = document.getElementById("continue-btn");
     if (continueBtnCap1) {
       continueBtnCap1.textContent = paginaSalvaLocal > 1 ? "CONTINUAR LENDO ▶" : "COMEÇAR LEITURA ▶";
@@ -109,59 +109,65 @@ if (guestBtn) {
     const cap1Status = document.getElementById("progress-status");
     if (cap1Status) cap1Status.textContent = `Página ${paginaSalvaLocal} de ${TOTAL_PAGINAS}`;
 
-    continueModal.classList.remove("hidden");
+    if (continueModal) continueModal.classList.remove("hidden");
   };
 }
 
-// MONITOR DO FIREBASE AUTH
+// MONITOR DO FIREBASE AUTH (CORRIGIDO PARA EVITAR O LOOP)
 auth.onAuthStateChanged(async (user) => {
   if (user) {
     usuarioAtual = user;
     modoVisitante = false;
-    welcomeModal.classList.add("hidden");
+
+    // ESCONDE A TELA INICIAL NA HORA (Evita voltar pro "Seja Bem-vindo")
+    if (welcomeModal) welcomeModal.classList.add("hidden");
+
+    let paginaSalva = 1;
 
     try {
       const userRef = db.collection("leitores").doc(user.uid);
       const userDoc = await userRef.get();
 
-      let paginaSalva = 1;
-
       if (userDoc.exists) {
         paginaSalva = userDoc.data().paginaAtual || 1;
       } else {
         await userRef.set({
-          nome: user.displayName,
-          email: user.email,
+          nome: user.displayName || "Leitor",
+          email: user.email || "",
           paginaAtual: 1
         });
       }
-
-      document.getElementById("welcome-user-text").textContent = `OLÁ, ${user.displayName ? user.displayName.toUpperCase() : 'LEITOR'}!`;
-
-      // Configura Capitulo 1
-      const continueBtnCap1 = document.getElementById("continue-btn");
-      if (continueBtnCap1) {
-        continueBtnCap1.textContent = paginaSalva > 1 ? "CONTINUAR LENDO ▶" : "COMEÇAR LEITURA ▶";
-        continueBtnCap1.onclick = () => abrirLeitor(paginaSalva - 1);
-      }
-
-      const cap1Status = document.getElementById("progress-status");
-      if (cap1Status) cap1Status.textContent = `Página ${paginaSalva} de ${TOTAL_PAGINAS}`;
-
-      continueModal.classList.remove("hidden");
     } catch (err) {
-      console.error("Erro ao carregar Firestore:", err);
+      console.error("Erro ao acessar Firestore:", err);
     }
+
+    // Atualiza a tela de seleção de capítulos
+    const userText = document.getElementById("welcome-user-text");
+    if (userText) {
+      userText.textContent = `OLÁ, ${user.displayName ? user.displayName.toUpperCase() : 'LEITOR'}!`;
+    }
+
+    const continueBtnCap1 = document.getElementById("continue-btn");
+    if (continueBtnCap1) {
+      continueBtnCap1.textContent = paginaSalva > 1 ? "CONTINUAR LENDO ▶" : "COMEÇAR LEITURA ▶";
+      continueBtnCap1.onclick = () => abrirLeitor(paginaSalva - 1);
+    }
+
+    const cap1Status = document.getElementById("progress-status");
+    if (cap1Status) cap1Status.textContent = `Página ${paginaSalva} de ${TOTAL_PAGINAS}`;
+
+    if (continueModal) continueModal.classList.remove("hidden");
+
   } else if (!modoVisitante) {
-    welcomeModal.classList.remove("hidden");
-    continueModal.classList.add("hidden");
+    if (welcomeModal) welcomeModal.classList.remove("hidden");
+    if (continueModal) continueModal.classList.add("hidden");
   }
 });
 
 // ABRIR O LEITOR NA PÁGINA SELECIONADA
 function abrirLeitor(indicePagina) {
   indiceAtual = indicePagina;
-  continueModal.classList.add("hidden");
+  if (continueModal) continueModal.classList.add("hidden");
   atualizarPagina();
 }
 
@@ -170,7 +176,7 @@ function salvarProgressoAutomatico(numeroPagina) {
   if (usuarioAtual && !modoVisitante) {
     db.collection("leitores").doc(usuarioAtual.uid).update({
       paginaAtual: numeroPagina
-    });
+    }).catch(err => console.error("Erro ao salvar progresso:", err));
   } else {
     const deviceId = obterOuCriarIdDispositivo();
     localStorage.setItem(`pagina_${deviceId}`, numeroPagina);
@@ -180,38 +186,42 @@ function salvarProgressoAutomatico(numeroPagina) {
 // ATUALIZAR INTERFACE DO LEITOR
 function atualizarPagina() {
   const numeroPaginaAtual = indiceAtual + 1;
-  
-  imgElement.src = paginas[indiceAtual];
+
+  if (imgElement) imgElement.src = paginas[indiceAtual];
   if (pageNumElement) pageNumElement.textContent = numeroPaginaAtual;
-  
+
   if (pageTextElement) {
     pageTextElement.textContent = textosPaginas[numeroPaginaAtual] || "Sem transcrição de texto para esta página.";
   }
 
-  nextBtn.disabled = indiceAtual === 0;
-  prevBtn.disabled = indiceAtual === paginas.length - 1;
+  if (nextBtn) nextBtn.disabled = indiceAtual === 0;
+  if (prevBtn) prevBtn.disabled = indiceAtual === paginas.length - 1;
 
   salvarProgressoAutomatico(numeroPaginaAtual);
 }
 
 // CONTROLES DE NAVEGAÇÃO
-prevBtn.addEventListener("click", () => {
-  if (indiceAtual < paginas.length - 1) {
-    indiceAtual++;
-    atualizarPagina();
-  }
-});
+if (prevBtn) {
+  prevBtn.addEventListener("click", () => {
+    if (indiceAtual < paginas.length - 1) {
+      indiceAtual++;
+      atualizarPagina();
+    }
+  });
+}
 
-nextBtn.addEventListener("click", () => {
-  if (indiceAtual > 0) {
-    indiceAtual--;
-    atualizarPagina();
-  }
-});
+if (nextBtn) {
+  nextBtn.addEventListener("click", () => {
+    if (indiceAtual > 0) {
+      indiceAtual--;
+      atualizarPagina();
+    }
+  });
+}
 
 document.addEventListener("keydown", (e) => {
-  if (e.key === "ArrowLeft") prevBtn.click();
-  if (e.key === "ArrowRight") nextBtn.click();
+  if (e.key === "ArrowLeft" && prevBtn) prevBtn.click();
+  if (e.key === "ArrowRight" && nextBtn) nextBtn.click();
 });
 
 // NAVEGAÇÃO POR SWIPE (TOUCH)
@@ -225,7 +235,7 @@ if (swipeArea) {
 
   swipeArea.addEventListener("touchend", (e) => {
     touchEndX = e.changedTouches[0].screenX;
-    if (touchStartX - touchEndX > 40) prevBtn.click();
-    if (touchEndX - touchStartX > 40) nextBtn.click();
+    if (touchStartX - touchEndX > 40 && prevBtn) prevBtn.click();
+    if (touchEndX - touchStartX > 40 && nextBtn) nextBtn.click();
   }, false);
 }
