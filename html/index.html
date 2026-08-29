@@ -11,6 +11,43 @@
 </head>
 <body>
 
+  <!-- TELA 1: LOGIN COM GOOGLE -->
+  <div id="welcome-modal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <h2>SEJA BEM-VINDO</h2>
+      <p>Faça login para salvar seu progresso no Celular e PC:</p>
+      <button id="save-user-btn" class="ninja-btn">ENTRAR COM GOOGLE 🚀</button>
+    </div>
+  </div>
+
+  <!-- TELA 2: ABA DE SELEÇÃO DE LIVROS -->
+  <div id="continue-modal" class="modal-overlay hidden">
+    <div class="modal-box modal-shelf">
+      <h2 id="welcome-user-text">OLÁ!</h2>
+      <p>Qual livro você quer ler?</p>
+      
+      <!-- ESTANTE DE LIVROS -->
+      <div class="books-shelf">
+        
+        <!-- CARD DO LIVRO: A GINGA -->
+        <div class="book-card">
+          <div class="cover-wrapper">
+            <!-- Coloque a imagem da sua capa no arquivo abaixo -->
+            <img src="../images/capa-a-ginga.png" alt="Capa A Ginga" class="book-cover" onerror="this.src='https://via.placeholder.com/150x220?text=Capa+A+Ginga'">
+          </div>
+          <div class="book-info">
+            <h3>A GINGA</h3>
+            <span class="chapter-tag">Capítulo 1</span>
+            <p id="progress-status">Carregando...</p>
+            <button id="continue-btn" class="ninja-btn">LER AGORA ▶</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- LEITOR PRINCIPAL DE MANGÁ -->
   <header>
     <div class="manga-title-wrapper">
       <h1 class="manga-title">A GINGA</h1>
@@ -39,6 +76,12 @@
     <button id="prev-btn" class="ninja-btn">Próxima ▶</button>
   </nav>
 
+  <!-- SDKs do Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+  <!-- Script Principal -->
   <script src="../js/script.js"></script>
 </body>
 </html>
