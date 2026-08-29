@@ -85,7 +85,7 @@ const textosPaginas = {
 };
 const paginas = [];
 for (let i = 1; i <= TOTAL_PAGINAS; i++) {
-  paginas.push(`../images/imagens${i}.png`);
+  paginas.push(`./images/imagens${i}.png`);
 }
 
 let usuarioAtual = null;
