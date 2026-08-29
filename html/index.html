@@ -11,12 +11,16 @@
 </head>
 <body>
 
-  <!-- TELA 1: LOGIN COM GOOGLE -->
+  <!-- TELA 1: LOGIN COM GOOGLE OU VISITANTE -->
   <div id="welcome-modal" class="modal-overlay hidden">
     <div class="modal-box">
       <h2>SEJA BEM-VINDO</h2>
-      <p>Faça login para salvar seu progresso no Celular e PC:</p>
-      <button id="save-user-btn" class="ninja-btn">ENTRAR COM GOOGLE 🚀</button>
+      <p>Escolha como deseja acessar a leitura:</p>
+      
+      <div class="modal-actions">
+        <button id="save-user-btn" class="btn-google">ENTRAR COM GOOGLE 🚀</button>
+        <button id="guest-btn" class="btn-guest">ENTRAR COMO VISITANTE 👤</button>
+      </div>
     </div>
   </div>
 
@@ -32,7 +36,6 @@
         <!-- CARD DO LIVRO: A GINGA -->
         <div class="book-card">
           <div class="cover-wrapper">
-            <!-- Coloque a imagem da sua capa no arquivo abaixo -->
             <img src="../images/capa-a-ginga.png" alt="Capa A Ginga" class="book-cover" onerror="this.src='https://via.placeholder.com/150x220?text=Capa+A+Ginga'">
           </div>
           <div class="book-info">

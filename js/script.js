@@ -1,6 +1,6 @@
 const TOTAL_PAGINAS = 16;
 
-// Configuração do Firebase corrigida (manga-28112026)
+// Configuração do Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyAplepZYqvND7QCwuxn6HQu1g5PALNbYIY",
   authDomain: "manga-28112026.firebaseapp.com",
@@ -41,6 +41,7 @@ for (let i = 1; i <= TOTAL_PAGINAS; i++) {
 }
 
 let usuarioAtual = null;
+let modoVisitante = false;
 let indiceAtual = 0;
 
 const imgElement = document.getElementById("manga-page");
@@ -54,28 +55,57 @@ const swipeArea = document.getElementById("swipe-area");
 const welcomeModal = document.getElementById("welcome-modal");
 const continueModal = document.getElementById("continue-modal");
 const googleLoginBtn = document.getElementById("save-user-btn");
+const guestBtn = document.getElementById("guest-btn");
 const continueBtn = document.getElementById("continue-btn");
 
 if (totalPagesElement) {
   totalPagesElement.textContent = TOTAL_PAGINAS;
 }
 
-// 1. LOGIN VIA REDIRECIONAMENTO
-googleLoginBtn.addEventListener("click", () => {
-  const provider = new firebase.auth.GoogleAuthProvider();
-  auth.signInWithRedirect(provider);
-});
+function obterOuCriarIdDispositivo() {
+  let deviceId = localStorage.getItem("leitor_device_id");
+  if (!deviceId) {
+    deviceId = "guest_" + Math.random().toString(36).substring(2, 15);
+    localStorage.setItem("leitor_device_id", deviceId);
+  }
+  return deviceId;
+}
+
+if (googleLoginBtn) {
+  googleLoginBtn.addEventListener("click", () => {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithRedirect(provider);
+  });
+}
+
+if (guestBtn) {
+  guestBtn.addEventListener("click", () => {
+    modoVisitante = true;
+    welcomeModal.classList.add("hidden");
+
+    const deviceId = obterOuCriarIdDispositivo();
+    const paginaSalvaLocal = parseInt(localStorage.getItem(`pagina_${deviceId}`)) || 1;
+
+    indiceAtual = paginaSalvaLocal - 1;
+
+    document.getElementById("welcome-user-text").textContent = "OLÁ, VISITANTE!";
+    document.getElementById("progress-status").textContent = `Página ${paginaSalvaLocal} de ${TOTAL_PAGINAS}`;
+    continueBtn.textContent = paginaSalvaLocal > 1 ? "CONTINUAR LENDO ▶" : "COMEÇAR LEITURA ▶";
+
+    continueModal.classList.remove("hidden");
+  });
+}
 
 auth.getRedirectResult().catch((error) => {
   if (error.code && error.code !== "auth/popup-closed-by-user") {
-    alert("Erro ao conectar com Google: " + error.message);
+    console.log("Erro login Google:", error.message);
   }
 });
 
-// 2. MONITORAMENTO DE AUTENTICAÇÃO E BANCO DE DADOS
 auth.onAuthStateChanged(async (user) => {
   if (user) {
     usuarioAtual = user;
+    modoVisitante = false;
     welcomeModal.classList.add("hidden");
 
     const userRef = db.collection("leitores").doc(user.uid);
@@ -100,26 +130,29 @@ auth.onAuthStateChanged(async (user) => {
     continueBtn.textContent = paginaSalva > 1 ? "CONTINUAR LENDO ▶" : "COMEÇAR LEITURA ▶";
 
     continueModal.classList.remove("hidden");
-  } else {
+  } else if (!modoVisitante) {
     welcomeModal.classList.remove("hidden");
   }
 });
 
-continueBtn.addEventListener("click", () => {
-  continueModal.classList.add("hidden");
-  atualizarPagina();
-});
+if (continueBtn) {
+  continueBtn.addEventListener("click", () => {
+    continueModal.classList.add("hidden");
+    atualizarPagina();
+  });
+}
 
-// 3. SALVAMENTO AUTOMÁTICO
 function salvarProgressoAutomatico(numeroPagina) {
-  if (usuarioAtual) {
+  if (usuarioAtual && !modoVisitante) {
     db.collection("leitores").doc(usuarioAtual.uid).update({
       paginaAtual: numeroPagina
     });
+  } else {
+    const deviceId = obterOuCriarIdDispositivo();
+    localStorage.setItem(`pagina_${deviceId}`, numeroPagina);
   }
 }
 
-// 4. CONTROLES DO LEITOR
 function atualizarPagina() {
   const numeroPaginaAtual = indiceAtual + 1;
   
@@ -158,12 +191,14 @@ document.addEventListener("keydown", (e) => {
 let touchStartX = 0;
 let touchEndX = 0;
 
-swipeArea.addEventListener("touchstart", (e) => {
-  touchStartX = e.changedTouches[0].screenX;
-}, false);
+if (swipeArea) {
+  swipeArea.addEventListener("touchstart", (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+  }, false);
 
-swipeArea.addEventListener("touchend", (e) => {
-  touchEndX = e.changedTouches[0].screenX;
-  if (touchStartX - touchEndX > 40) prevBtn.click();
-  if (touchEndX - touchStartX > 40) nextBtn.click();
-}, false);
+  swipeArea.addEventListener("touchend", (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    if (touchStartX - touchEndX > 40) prevBtn.click();
+    if (touchEndX - touchStartX > 40) nextBtn.click();
+  }, false);
+}
