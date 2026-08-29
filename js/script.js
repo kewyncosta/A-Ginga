@@ -1,7 +1,8 @@
 const TOTAL_PAGINAS = 16;
 
+// Configuração do Firebase com a API Key corrigida
 const firebaseConfig = {
-  apiKey: "AIzaSyAp1epZYqvND7QCwuxn6HQu1g5PALNbYIY",
+  apiKey: "AIzaSyAplepZYqvND7QCwuxn6HQu1g5PALNbYIY",
   authDomain: "manga-29112026.firebaseapp.com",
   projectId: "manga-29112026",
   storageBucket: "manga-29112026.firebasestorage.app",
@@ -31,7 +32,7 @@ const textosPaginas = {
   13: "Página 13:\n• A primeira missão\nDepois de meses de treinamento, os quatro chegaram ao exame final da Academia.\nEles ainda não eram Genin.\nPrecisavam provar que estavam preparados.\nO exame tinha três partes.\nPrimeiro, uma prova escrita.\nRodrigo terminou rapidamente.\nAdriely foi muito bem.\nKewyn ficou olhando para a folha.\n— Professor...\n— O que foi?",
   14: "Página 14:\n— Posso desenhar?\n— Não.\nNicolas começou a rir.\nDepois veio a segunda prova.\nArremesso de kunai.\nNicolas foi excelente.\nRodrigo acertou os alvos com precisão.\nAdriely teve um desempenho equilibrado.\nKewyn não foi o melhor no arremesso, mas conseguiu compensar usando sua movimentação.\nFinalmente veio a terceira prova.\nCombate.",
   15: "Página 15:\nKewyn entrou na arena.\nSeu adversário era maior.\nO garoto avançou.\nKewyn gingou.\nEsquerda.\nDireita.\nEsquerda.\nO adversário tentou agarrá-lo.\nKewyn desviou.\nGirou.\nPassou por baixo do braço do garoto.",
-  16: "Página 16:\nE acertou uma rasteira.\nO adversário caiu.\nKewyn ficou parado.\nO professor levantou a mão.\n— Vitória de Kewyn.\nAs crianças comemoraram.\nKewyn sorriu.\nMas o professor não.\nHe estava olhando para os olhos de Kewyn.\nHavia algo diferente naquela linhagem.\nAlgo que ainda estava adormecido."
+  16: "Página 16:\nE acertou uma rasteira.\nO adversário caiu.\nKewyn ficou parado.\nO professor levantou a mão.\n— Vitória de Kewyn.\nAs crianças comemoraram.\nKewyn sorriu.\nMas o professor não.\nEle estava olhando para os olhos de Kewyn.\nHavia algo diferente naquela linhagem.\nAlgo que ainda estava adormecido."
 };
 
 const paginas = [];
@@ -90,7 +91,6 @@ auth.onAuthStateChanged(async (user) => {
 
     indiceAtual = paginaSalva - 1;
 
-    // Atualiza a tela de seleção com os dados do usuário
     document.getElementById("welcome-user-text").textContent = `OLÁ, ${user.displayName.toUpperCase()}!`;
     document.getElementById("progress-status").textContent = `Página ${paginaSalva} de ${TOTAL_PAGINAS}`;
     continueBtn.textContent = paginaSalva > 1 ? "CONTINUAR LENDO ▶" : "COMEÇAR LEITURA ▶";
@@ -106,7 +106,7 @@ continueBtn.addEventListener("click", () => {
   atualizarPagina();
 });
 
-// 3. SALVAMENTO NUVEM
+// 3. SALVAMENTO AUTOMÁTICO NA NUVEM
 function salvarProgressoAutomatico(numeroPagina) {
   if (usuarioAtual) {
     db.collection("leitores").doc(usuarioAtual.uid).update({
@@ -115,7 +115,7 @@ function salvarProgressoAutomatico(numeroPagina) {
   }
 }
 
-// 4. CONTROLES DO LEITOR
+// 4. CONTROLES DE NAVEGAÇÃO
 function atualizarPagina() {
   const numeroPaginaAtual = indiceAtual + 1;
   
