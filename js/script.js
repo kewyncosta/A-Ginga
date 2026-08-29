@@ -1,11 +1,11 @@
 const TOTAL_PAGINAS = 16;
 
-// Configuração do Firebase
+// Configuração do Firebase corrigida (manga-28112026)
 const firebaseConfig = {
   apiKey: "AIzaSyAplepZYqvND7QCwuxn6HQu1g5PALNbYIY",
-  authDomain: "manga-29112026.firebaseapp.com",
-  projectId: "manga-29112026",
-  storageBucket: "manga-29112026.firebasestorage.app",
+  authDomain: "manga-28112026.firebaseapp.com",
+  projectId: "manga-28112026",
+  storageBucket: "manga-28112026.firebasestorage.app",
   messagingSenderId: "697118394892",
   appId: "1:697118394892:web:7a088539d459827459bc29",
   measurementId: "G-JG0XKD8LVP"
@@ -60,13 +60,12 @@ if (totalPagesElement) {
   totalPagesElement.textContent = TOTAL_PAGINAS;
 }
 
-// 1. LOGIN VIA REDIRECIONAMENTO (GRATUITO)
+// 1. LOGIN VIA REDIRECIONAMENTO
 googleLoginBtn.addEventListener("click", () => {
   const provider = new firebase.auth.GoogleAuthProvider();
   auth.signInWithRedirect(provider);
 });
 
-// Captura o retorno do redirecionamento caso ocorra algum erro
 auth.getRedirectResult().catch((error) => {
   if (error.code && error.code !== "auth/popup-closed-by-user") {
     alert("Erro ao conectar com Google: " + error.message);
