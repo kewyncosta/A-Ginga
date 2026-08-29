@@ -1,6 +1,6 @@
 const TOTAL_PAGINAS = 16;
 
-// Configuração do Firebase com a API Key corrigida
+// Configuração do Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyAplepZYqvND7QCwuxn6HQu1g5PALNbYIY",
   authDomain: "manga-29112026.firebaseapp.com",
@@ -60,15 +60,20 @@ if (totalPagesElement) {
   totalPagesElement.textContent = TOTAL_PAGINAS;
 }
 
-// 1. LOGIN COM GOOGLE
+// 1. LOGIN VIA REDIRECIONAMENTO (GRATUITO)
 googleLoginBtn.addEventListener("click", () => {
   const provider = new firebase.auth.GoogleAuthProvider();
-  auth.signInWithPopup(provider).catch((error) => {
-    alert("Erro ao fazer login: " + error.message);
-  });
+  auth.signInWithRedirect(provider);
 });
 
-// 2. MONITORAMENTO DE LOGIN E BANCO DE DADOS
+// Captura o retorno do redirecionamento caso ocorra algum erro
+auth.getRedirectResult().catch((error) => {
+  if (error.code && error.code !== "auth/popup-closed-by-user") {
+    alert("Erro ao conectar com Google: " + error.message);
+  }
+});
+
+// 2. MONITORAMENTO DE AUTENTICAÇÃO E BANCO DE DADOS
 auth.onAuthStateChanged(async (user) => {
   if (user) {
     usuarioAtual = user;
@@ -106,7 +111,7 @@ continueBtn.addEventListener("click", () => {
   atualizarPagina();
 });
 
-// 3. SALVAMENTO AUTOMÁTICO NA NUVEM
+// 3. SALVAMENTO AUTOMÁTICO
 function salvarProgressoAutomatico(numeroPagina) {
   if (usuarioAtual) {
     db.collection("leitores").doc(usuarioAtual.uid).update({
@@ -115,7 +120,7 @@ function salvarProgressoAutomatico(numeroPagina) {
   }
 }
 
-// 4. CONTROLES DE NAVEGAÇÃO
+// 4. CONTROLES DO LEITOR
 function atualizarPagina() {
   const numeroPaginaAtual = indiceAtual + 1;
   
@@ -162,4 +167,4 @@ swipeArea.addEventListener("touchend", (e) => {
   touchEndX = e.changedTouches[0].screenX;
   if (touchStartX - touchEndX > 40) prevBtn.click();
   if (touchEndX - touchStartX > 40) nextBtn.click();
-}, false);  
+}, false);
