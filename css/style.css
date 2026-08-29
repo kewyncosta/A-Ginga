@@ -82,13 +82,16 @@ body {
   width: 100%;
   margin-top: 5px;
 }
-
 /* ==========================================
    BOTÕES DA MODAL INICIAL (DESIGN IDÊNTICO)
    ========================================== */
 
+/* Aplica o estilo escuro/laranja para QUALQUER botão da modal */
+.modal-actions button,
 .btn-google,
-.btn-guest {
+.btn-guest,
+#save-user-btn,
+#guest-btn {
   width: 100% !important;
   height: 48px !important;
   padding: 0 16px !important;
@@ -103,48 +106,32 @@ body {
   gap: 10px !important;
   box-shadow: 2px 2px 0px #000 !important;
   transition: all 0.15s ease !important;
-  z-index: 10001 !important;
   box-sizing: border-box !important;
   outline: none !important;
   text-decoration: none !important;
-}
 
-/* Ajuste do Ícone SVG do Google dentro do botão */
-.btn-google svg,
-.btn-google img {
-  width: 20px !important;
-  height: 20px !important;
-  flex-shrink: 0 !important;
-}
-
-/* Estilo do Botão Google */
-.btn-google {
-  background-color: #ffffff !important;
-  color: #111111 !important;
-  border: 2px solid #ffffff !important;
-}
-
-.btn-google:hover {
-  background-color: #e6e6e6 !important;
-  border-color: #e6e6e6 !important;
-  color: #000000 !important;
-}
-
-/* Estilo do Botão Visitante */
-.btn-guest {
+  /* FUNDO ESCURO, TEXTO LARANJA E BORDA LARANJA (IGUAL AO VISITANTE) */
   background-color: transparent !important;
   color: #ff8533 !important;
   border: 2px solid #ff6b00 !important;
 }
 
-.btn-guest:hover {
+/* Efeito ao passar o mouse em ambos os botões */
+.modal-actions button:hover,
+.btn-google:hover,
+.btn-guest:hover,
+#save-user-btn:hover,
+#guest-btn:hover {
   background-color: rgba(255, 107, 0, 0.15) !important;
   color: #ffffff !important;
 }
 
-/* Clique (Pressionado) */
+/* Efeito de clique (pressionar) */
+.modal-actions button:active,
 .btn-google:active,
-.btn-guest:active {
+.btn-guest:active,
+#save-user-btn:active,
+#guest-btn:active {
   transform: translate(1px, 1px) !important;
   box-shadow: 1px 1px 0px #000 !important;
 }
