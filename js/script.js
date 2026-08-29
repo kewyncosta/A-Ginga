@@ -162,4 +162,4 @@ swipeArea.addEventListener("touchend", (e) => {
   touchEndX = e.changedTouches[0].screenX;
   if (touchStartX - touchEndX > 40) prevBtn.click();
   if (touchEndX - touchStartX > 40) nextBtn.click();
-}, false);
+}, false);  
