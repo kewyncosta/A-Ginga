@@ -44,6 +44,7 @@ let usuarioAtual = null;
 let modoVisitante = false;
 let indiceAtual = 0;
 
+// Referências de Elementos HTML
 const imgElement = document.getElementById("manga-page");
 const pageNumElement = document.getElementById("page-num");
 const totalPagesElement = document.getElementById("total-pages");
@@ -56,7 +57,6 @@ const welcomeModal = document.getElementById("welcome-modal");
 const continueModal = document.getElementById("continue-modal");
 const googleLoginBtn = document.getElementById("save-user-btn");
 const guestBtn = document.getElementById("guest-btn");
-const continueBtn = document.getElementById("continue-btn");
 
 if (totalPagesElement) {
   totalPagesElement.textContent = TOTAL_PAGINAS;
@@ -71,77 +71,101 @@ function obterOuCriarIdDispositivo() {
   return deviceId;
 }
 
+// LOGIN GOOGLE (Uso de Popup para evitar loop no redirecionamento)
 if (googleLoginBtn) {
-  googleLoginBtn.addEventListener("click", () => {
+  googleLoginBtn.onclick = async function (e) {
+    e.preventDefault();
     const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithRedirect(provider);
-  });
+    try {
+      await auth.signInWithPopup(provider);
+    } catch (error) {
+      if (error.code !== "auth/popup-closed-by-user") {
+        console.error("Erro no login Google:", error);
+        alert("Erro ao conectar com o Google. Tente novamente.");
+      }
+    }
+  };
 }
 
+// ENTRAR COMO VISITANTE
 if (guestBtn) {
-  guestBtn.addEventListener("click", () => {
+  guestBtn.onclick = function (e) {
+    e.preventDefault();
     modoVisitante = true;
     welcomeModal.classList.add("hidden");
 
     const deviceId = obterOuCriarIdDispositivo();
     const paginaSalvaLocal = parseInt(localStorage.getItem(`pagina_${deviceId}`)) || 1;
 
-    indiceAtual = paginaSalvaLocal - 1;
-
     document.getElementById("welcome-user-text").textContent = "OLÁ, VISITANTE!";
-    document.getElementById("progress-status").textContent = `Página ${paginaSalvaLocal} de ${TOTAL_PAGINAS}`;
-    continueBtn.textContent = paginaSalvaLocal > 1 ? "CONTINUAR LENDO ▶" : "COMEÇAR LEITURA ▶";
+    
+    // Atualiza botão do Capítulo 1
+    const continueBtnCap1 = document.getElementById("continue-btn");
+    if (continueBtnCap1) {
+      continueBtnCap1.textContent = paginaSalvaLocal > 1 ? "CONTINUAR LENDO ▶" : "COMEÇAR LEITURA ▶";
+      continueBtnCap1.onclick = () => abrirLeitor(paginaSalvaLocal - 1);
+    }
+
+    const cap1Status = document.getElementById("progress-status");
+    if (cap1Status) cap1Status.textContent = `Página ${paginaSalvaLocal} de ${TOTAL_PAGINAS}`;
 
     continueModal.classList.remove("hidden");
-  });
+  };
 }
 
-auth.getRedirectResult().catch((error) => {
-  if (error.code && error.code !== "auth/popup-closed-by-user") {
-    console.log("Erro login Google:", error.message);
-  }
-});
-
+// MONITOR DO FIREBASE AUTH
 auth.onAuthStateChanged(async (user) => {
   if (user) {
     usuarioAtual = user;
     modoVisitante = false;
     welcomeModal.classList.add("hidden");
 
-    const userRef = db.collection("leitores").doc(user.uid);
-    const userDoc = await userRef.get();
+    try {
+      const userRef = db.collection("leitores").doc(user.uid);
+      const userDoc = await userRef.get();
 
-    let paginaSalva = 1;
+      let paginaSalva = 1;
 
-    if (userDoc.exists) {
-      paginaSalva = userDoc.data().paginaAtual || 1;
-    } else {
-      await userRef.set({
-        nome: user.displayName,
-        email: user.email,
-        paginaAtual: 1
-      });
+      if (userDoc.exists) {
+        paginaSalva = userDoc.data().paginaAtual || 1;
+      } else {
+        await userRef.set({
+          nome: user.displayName,
+          email: user.email,
+          paginaAtual: 1
+        });
+      }
+
+      document.getElementById("welcome-user-text").textContent = `OLÁ, ${user.displayName ? user.displayName.toUpperCase() : 'LEITOR'}!`;
+
+      // Configura Capitulo 1
+      const continueBtnCap1 = document.getElementById("continue-btn");
+      if (continueBtnCap1) {
+        continueBtnCap1.textContent = paginaSalva > 1 ? "CONTINUAR LENDO ▶" : "COMEÇAR LEITURA ▶";
+        continueBtnCap1.onclick = () => abrirLeitor(paginaSalva - 1);
+      }
+
+      const cap1Status = document.getElementById("progress-status");
+      if (cap1Status) cap1Status.textContent = `Página ${paginaSalva} de ${TOTAL_PAGINAS}`;
+
+      continueModal.classList.remove("hidden");
+    } catch (err) {
+      console.error("Erro ao carregar Firestore:", err);
     }
-
-    indiceAtual = paginaSalva - 1;
-
-    document.getElementById("welcome-user-text").textContent = `OLÁ, ${user.displayName.toUpperCase()}!`;
-    document.getElementById("progress-status").textContent = `Página ${paginaSalva} de ${TOTAL_PAGINAS}`;
-    continueBtn.textContent = paginaSalva > 1 ? "CONTINUAR LENDO ▶" : "COMEÇAR LEITURA ▶";
-
-    continueModal.classList.remove("hidden");
   } else if (!modoVisitante) {
     welcomeModal.classList.remove("hidden");
+    continueModal.classList.add("hidden");
   }
 });
 
-if (continueBtn) {
-  continueBtn.addEventListener("click", () => {
-    continueModal.classList.add("hidden");
-    atualizarPagina();
-  });
+// ABRIR O LEITOR NA PÁGINA SELECIONADA
+function abrirLeitor(indicePagina) {
+  indiceAtual = indicePagina;
+  continueModal.classList.add("hidden");
+  atualizarPagina();
 }
 
+// SALVAR PROGRESSO
 function salvarProgressoAutomatico(numeroPagina) {
   if (usuarioAtual && !modoVisitante) {
     db.collection("leitores").doc(usuarioAtual.uid).update({
@@ -153,6 +177,7 @@ function salvarProgressoAutomatico(numeroPagina) {
   }
 }
 
+// ATUALIZAR INTERFACE DO LEITOR
 function atualizarPagina() {
   const numeroPaginaAtual = indiceAtual + 1;
   
@@ -169,6 +194,7 @@ function atualizarPagina() {
   salvarProgressoAutomatico(numeroPaginaAtual);
 }
 
+// CONTROLES DE NAVEGAÇÃO
 prevBtn.addEventListener("click", () => {
   if (indiceAtual < paginas.length - 1) {
     indiceAtual++;
@@ -188,6 +214,7 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "ArrowRight") nextBtn.click();
 });
 
+// NAVEGAÇÃO POR SWIPE (TOUCH)
 let touchStartX = 0;
 let touchEndX = 0;
 
