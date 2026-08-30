@@ -1,4 +1,4 @@
-const TOTAL_PAGINAS = 104;
+const TOTAL_PAGINAS = 119;
 
 // Configuração do Firebase
 const firebaseConfig = {
