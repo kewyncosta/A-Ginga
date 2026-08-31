@@ -1,4 +1,4 @@
-const TOTAL_PAGINAS = 119;
+const TOTAL_PAGINAS = 134;
 
 // Configuração do Firebase
 const firebaseConfig = {
@@ -138,7 +138,21 @@ const textosPaginas = {
   117: "Página 117:\n• Os Olhos Brancos\nA porta tremeu e uma pequena rachadura se abriu.\nDo outro lado, dois olhos brancos e brilhantes se abriram no escuro.\nKewyn acordou assustado na cama, respirando rapidamente e olhando em direção à janela iluminada pela lua.",
   118: "Página 118:\n• A Busca Pela Verdade\nEle tocou os próprios olhos pensando no que estava acontecendo com seu corpo e seu poder.\nMesmo sem entender todas as respostas, Kewyn sabia que seu verdadeiro despertar havia apenas começado e que precisaria ficar mais forte.",
   119: "Página 119:\n• O Destino do Herdeiro\nNa Vila da Ginga, a reconstrução havia começado, mas novos desafios já se aproximavam no horizonte.\nO herdeiro do Clã Ginga estava pronto para encarar seu destino.\nContinua...\nFim do Capítulo 8 — O Herdeiro do Clã Ginga.",
-
+  120: "Página 120:\n• Capítulo 9 — A Porta dos Ancestrais\nA noite havia passado, mas Kewyn não conseguia esquecer o sonho com aquela porta, a voz e os olhos brancos que diziam: 'Você ainda não está pronto.'\nEle olhou para as próprias mãos na cama e sentiu a presença de novo.\n— O que existe atrás daquela porta?\nEu preciso descobrir.",
+  121: "Página 121:\n• O Desafio do Mestre\nNa manhã seguinte, Kewyn chegou cedo ao campo de treinamento e encontrou Jairo.\n— Você teve o sonho novamente? — perguntou o mestre.\nKewyn ficou surpreso e soube que Jairo já conhecia aquela porta.\n— Então me conta!\n— Algumas verdades precisam ser descobertas, não contadas — respondeu Jairo.\n— Então me treine — exigiu Kewyn.",
+  122: "Página 122:\n• O Treinamento Dividido\nJairo reuniu os quatro Genin para um novo treino dividido em quatro áreas e uma quinta parte fundamental: o trabalho em equipe.\nKewyn focaria na percepção do Byakugan, Adriely no controle de água e gelo, Rodrigo na estratégia com vento e Nicolas na velocidade com Raiton.",
+  123: "Página 123:\n• Treino às Cegas\nJairo colocou uma venda nos olhos de Kewyn para que ele dependesse do chakra e não apenas da visão.\nNo início, Kewyn quase foi atingido por pedras lançadas por Jairo.\nApós se acalmar, Kewyn girou, sentiu o chakra e pegou a pedra no ar.\nJairo ensinou que ele devia aprender a lutar bem com ou sem o Byakugan.",
+  124: "Página 124:\n• A Arte do Gelo de Adriely\nAdriely treinou no lago fazendo uma enorme onda subir e congelar no ar.\nCRACK!\nEm seguida, construiu uma ponte de gelo e a transformou em dezenas de pequenas lanças congeladas.\nRodrigo e Nicolas ficaram impressionados com a evolução e a periculosidade da técnica.",
+  125: "Página 125:\n• A Precisão do Vento\nRodrigo treinou gingando e canalizando seu chakra de vento para criar a Ginga do Vendaval.\nEle fez a corrente de ar mudar de direção no ar e acertar múltiplos alvos em sequência.\nBOOM! BOOM! BOOM!\nEle reforçou que a precisão técnica sempre superava a força bruta.",
+  126: "Página 126:\n• O Controle de Nicolas\nNicolas subiu a montanha para acertar múltiplos alvos com Raiton em menos de dez segundos.\nAo tentar acelerar sem controle, acabou tropeçando e caindo no chão.\nKewyn, Adriely e Rodrigo riram da situação enquanto Nicolas prometia demonstrar sua verdadeira velocidade na próxima vez.",
+  127: "Página 127:\n• A Nova Missão\nSemanas depois, um mensageiro entregou um pergaminho a Jairo.\nO mestre leu o conteúdo e informou a equipe que iriam investigar o antigo templo do Clã Ginga, pois marcas estranhas de chakra haviam sido detectadas no local.",
+  128: "Página 128:\n• Diante do Templo Antigo\nA equipe chegou ao templo ao anoitecer.\nKewyn ativou o Byakugan e encontrou um fluxo de chakra escondido atrás de uma parede congelada.\nAdriely tocou a superfície e confirmou que o gelo não havia sido criado por ela, indicando que alguém esteve ali antes.",
+  129: "Página 129:\n• A Inscrição Sagrada\nRodrigo limpou a poeira de uma pedra e leu: 'Somente aquele que enxerga além da própria visão poderá abrir o caminho.'\nKewyn colocou a mão na parede e ativou o Byakugan.\nA pedra tremeu, uma fenda surgiu e uma escadaria abriu-se em direção ao subterrâneo.",
+  130: "Página 130:\n• O Salão Subterrâneo\nAo descerem a escadaria, a equipe encontrou uma enorme sala com a estátua de um antigo guerreiro em posição de capoeira e de olhos completamente brancos.\nKewyn reconheceu a figura de seus sonhos.\nNo peito da estátua, havia o mesmo símbolo presente no corpo de Raizen.",
+  131: "Página 131:\n• A Armadilha de Raizen\nCLANG!\nA porta de entrada se fechou bruscamente deixando todos presos.\nUma voz ecoou pelo salão e Raizen surgiu de trás da estátua acompanhado por três ninjas misteriosos.\n— Bem-vindos ao lugar onde a história do Clã Ginga começou — declarou Raizen.",
+  132: "Página 132:\n• O Teste dos Ancestrais\nKewyn entrou em posição de luta exigindo respostas.\nRaizen afirmou que desejava testar se a nova geração era digna do nome da Equipe Ginga.\nEle fez um selo selando o salão e ordenou que seus subordinados atacassem.",
+  133: "Página 133:\n• A Equipe em Posição\nOs três ninjas inimigos avançaram com velocidade.\nAdriely preparou a água, Rodrigo concentrou o vento, Nicolas ativou o Raiton e Kewyn ativou o Byakugan.\nOs quatro Genin formaram uma linha de defesa pronta para o combate.",
+  134: "Página 134:\n• O Início da Batalha Subterrânea\nCom seus poderes sincronizados e sob o olhar atento de Jairo e Raizen, a Equipe Ginga iniciou o confronto no coração do antigo templo.\nContinua...\nFim do Capítulo 9 — A Porta dos Ancestrais."
 };
 const paginas = [];
 for (let i = 1; i <= TOTAL_PAGINAS; i++) {
