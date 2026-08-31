@@ -152,7 +152,7 @@ const textosPaginas = {
   131: "Página 131:\n• A Armadilha de Raizen\nCLANG!\nA porta de entrada se fechou bruscamente deixando todos presos.\nUma voz ecoou pelo salão e Raizen surgiu de trás da estátua acompanhado por três ninjas misteriosos.\n— Bem-vindos ao lugar onde a história do Clã Ginga começou — declarou Raizen.",
   132: "Página 132:\n• O Teste dos Ancestrais\nKewyn entrou em posição de luta exigindo respostas.\nRaizen afirmou que desejava testar se a nova geração era digna do nome da Equipe Ginga.\nEle fez um selo selando o salão e ordenou que seus subordinados atacassem.",
   133: "Página 133:\n• A Equipe em Posição\nOs três ninjas inimigos avançaram com velocidade.\nAdriely preparou a água, Rodrigo concentrou o vento, Nicolas ativou o Raiton e Kewyn ativou o Byakugan.\nOs quatro Genin formaram uma linha de defesa pronta para o combate.",
-  134: "Página 134:\n• O Início da Batalha Subterrânea\nCom seus poderes sincronizados e sob o olhar atento de Jairo e Raizen, a Equipe Ginga iniciou o confronto no coração do antigo templo.\nContinua...\nFim do Capítulo 9 — A Porta dos Ancestrais."
+  134: "Página 134:\n• O Início da Batalha Subterrânea\nCom seus poderes sincronizados e sob o olhar atento de Jairo e Raizen, a Equipe Ginga iniciou o confronto no coração do antigo templo.\nContinua...\nFim do Capítulo 9 — A Porta dos Ancestrais.",
 };
 const paginas = [];
 for (let i = 1; i <= TOTAL_PAGINAS; i++) {
