@@ -18,6 +18,7 @@ if (typeof firebase !== "undefined") {
 const auth = typeof firebase !== "undefined" ? firebase.auth() : null;
 const db = typeof firebase !== "undefined" ? firebase.firestore() : null;
 
+// Objeto reservado para transcrever o texto de cada página
 const textosPaginas = {
   1: "Página 1:\n• A Ginga Começa\nMuito antes de Kewyn se tornar conhecido como um dos mais habilidosos ninjas do Clã Ginga, ele era apenas uma criança.\nUm garoto curioso, inquieto e que nunca conseguia ficar parado.\nEle vivia na Vila da Ginga, uma pequena vila ninja escondida entre enormes montanhas e uma floresta cheia de rios.\nDiferente das outras vilas, a Vila da Ginga tinha uma tradição que fazia parte da vida de todos os seus habitantes: a capoeira.\nPara os membros do Clã Ginga, capoeira não era apenas uma dança.\nEra uma arte de combate.\nEra uma maneira de se movimentar.\nEra uma forma de pensar.\nDesde pequenos, os membros do clã aprendiam a gingar antes mesmo de aprenderem a controlar completamente o chakra.\nA primeira lição era simples: Não fique parado diante do perigo.",
   2: "Página 2:\n• O pequeno Kewyn\nKewyn tinha oito anos.\nNaquela época, seus dois olhos eram completamente normais, castanhos, e ele ainda não havia despertado o verdadeiro poder de sua linhagem.\nEle treinava todos os dias com outras crianças do clã.\nEnquanto algumas crianças preferiam treinar kunais e shurikens, Kewyn gostava mesmo era de lutar usando as pernas.\n— Você nunca vai aprender a lutar direito desse jeito! — reclamou um garoto depois de cair no chão.\nKewyn abriu um sorriso.\n— Mas eu ganhei.\n— Você trapaceou!\n— Capoeira não é trapaça.\nKewyn entrou novamente na posição de ginga.\nO garoto avançou.\nKewyn desviou para o lado, colocou uma das mãos no chão e passou as pernas por cima do adversário.\nO menino perdeu o equilíbrio e caiu novamente.\nAs outras crianças começaram a rir.",
@@ -154,17 +155,12 @@ const textosPaginas = {
   133: "Página 133:\n• A Equipe em Posição\nOs três ninjas inimigos avançaram com velocidade.\nAdriely preparou a água, Rodrigo concentrou o vento, Nicolas ativou o Raiton e Kewyn ativou o Byakugan.\nOs quatro Genin formaram uma linha de defesa pronta para o combate.",
   134: "Página 134:\n• O Início da Batalha Subterrânea\nCom seus poderes sincronizados e sob o olhar atento de Jairo e Raizen, a Equipe Ginga iniciou o confronto no coração do antigo templo.\nContinua...\nFim do Capítulo 9 — A Porta dos Ancestrais.",
 };
-const paginas = [];
-for (let i = 1; i <= TOTAL_PAGINAS; i++) {
-  paginas.push(`./images/imagens${i}.png`);
-}
 
 let usuarioAtual = null;
 let modoVisitante = false;
 let indiceAtual = 0;
 
 // Referências de Elementos HTML
-const imgElement = document.getElementById("manga-page");
 const pageNumElement = document.getElementById("page-num");
 const totalPagesElement = document.getElementById("total-pages");
 const pageTextElement = document.getElementById("page-text");
@@ -181,13 +177,6 @@ if (totalPagesElement) {
   totalPagesElement.textContent = TOTAL_PAGINAS;
 }
 
-// Trata erro de imagem não carregada sem quebrar a tela
-if (imgElement) {
-  imgElement.onerror = function () {
-    console.warn(`Imagem não encontrada para a página ${indiceAtual + 1}`);
-  };
-}
-
 function obterOuCriarIdDispositivo() {
   let deviceId = localStorage.getItem("leitor_device_id");
   if (!deviceId) {
@@ -198,7 +187,7 @@ function obterOuCriarIdDispositivo() {
 }
 
 // LOGIN GOOGLE
-if (googleLoginBtn && auth) {
+if (googleLoginBtn && typeof auth !== "undefined") {
   googleLoginBtn.onclick = async function (e) {
     e.preventDefault();
     const provider = new firebase.auth.GoogleAuthProvider();
@@ -240,7 +229,7 @@ if (guestBtn) {
 }
 
 // MONITOR DO FIREBASE AUTH
-if (auth) {
+if (typeof auth !== "undefined") {
   auth.onAuthStateChanged(async (user) => {
     if (user) {
       usuarioAtual = user;
@@ -250,7 +239,7 @@ if (auth) {
 
       let paginaSalva = 1;
 
-      if (db) {
+      if (typeof db !== "undefined") {
         try {
           const userRef = db.collection("leitores").doc(user.uid);
           const userDoc = await userRef.get();
@@ -301,7 +290,7 @@ function abrirLeitor(indicePagina) {
 
 // SALVAR PROGRESSO
 function salvarProgressoAutomatico(numeroPagina) {
-  if (usuarioAtual && !modoVisitante && db) {
+  if (usuarioAtual && !modoVisitante && typeof db !== "undefined") {
     db.collection("leitores").doc(usuarioAtual.uid).set({
       paginaAtual: numeroPagina
     }, { merge: true }).catch(err => console.error("Erro ao salvar progresso:", err));
@@ -315,22 +304,17 @@ function salvarProgressoAutomatico(numeroPagina) {
 function atualizarPagina() {
   const numeroPaginaAtual = indiceAtual + 1;
 
-  if (imgElement) imgElement.src = paginas[indiceAtual];
   if (pageNumElement) pageNumElement.textContent = numeroPaginaAtual;
 
   if (pageTextElement) {
-    pageTextElement.innerText = textosPaginas[numeroPaginaAtual] || "Sem transcrição de texto para esta página.";
+    pageTextElement.innerText = (typeof textosPaginas !== "undefined" && textosPaginas[numeroPaginaAtual]) 
+      ? textosPaginas[numeroPaginaAtual] 
+      : "Sem texto para esta página.";
   }
 
   // Atualiza botões
   if (nextBtn) nextBtn.disabled = indiceAtual === 0;
-  if (prevBtn) prevBtn.disabled = indiceAtual === paginas.length - 1;
-
-  // Atualiza ícones visuais adicionais se existirem no HTML
-  const statusIcon = document.getElementById("status-icon");
-  if (statusIcon) {
-    statusIcon.classList.toggle("active", numeroPaginaAtual > 1);
-  }
+  if (prevBtn) prevBtn.disabled = indiceAtual === TOTAL_PAGINAS - 1;
 
   salvarProgressoAutomatico(numeroPaginaAtual);
 }
@@ -338,7 +322,7 @@ function atualizarPagina() {
 // BOTÕES DE NAVEGAÇÃO
 if (prevBtn) {
   prevBtn.addEventListener("click", () => {
-    if (indiceAtual < paginas.length - 1) {
+    if (indiceAtual < TOTAL_PAGINAS - 1) {
       indiceAtual++;
       atualizarPagina();
     }
@@ -374,4 +358,19 @@ if (swipeArea) {
     if (touchStartX - touchEndX > 40 && prevBtn) prevBtn.click();
     if (touchEndX - touchStartX > 40 && nextBtn) nextBtn.click();
   }, false);
+}
+
+// ALTERNAR ENTRE MODO CLARO E MODO ESCURO
+const themeToggleBtn = document.getElementById('theme-toggle-btn');
+
+if (themeToggleBtn) {
+  themeToggleBtn.addEventListener('click', () => {
+    document.body.classList.toggle('light-mode');
+
+    if (document.body.classList.contains('light-mode')) {
+      themeToggleBtn.textContent = '🌙 Modo Escuro';
+    } else {
+      themeToggleBtn.textContent = '☀️ Modo Claro';
+    }
+  });
 }

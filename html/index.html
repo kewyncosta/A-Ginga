@@ -4,17 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   
-  <!-- TÍTULO DA ABA -->
   <title>Mangá</title>
 
-  <!-- FAVICON CORRETO -->
+  <!-- FAVICON -->
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <link rel="icon" type="image/png" href="../favicon-96x96.png">
 
   <link rel="stylesheet" href="../css/style.css">
-  <link rel="preconnect" href="../https://fonts.googleapis.com">
-  <link rel="preconnect" href="../https://fonts.gstatic.com" crossorigin>
-  <link href="../https://fonts.googleapis.com/css2?family=Bangers&family=Permanent+Marker&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Permanent+Marker&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -40,7 +39,7 @@
       <!-- ESTANTE DE LIVROS -->
       <div class="books-shelf">
         
-        <!-- CARD DO LIVRO: A GINGA -->
+        <!-- CARD DO LIVRO: A GINGA (CAPA MANTIDA) -->
         <div class="book-card">
           <div class="cover-wrapper">
             <img src="../images/capa-a-ging.jpeg" alt="Capa A Ginga" class="book-cover" onerror="this.src='https://via.placeholder.com/150x220?text=Capa+A+Ginga'">
@@ -63,17 +62,17 @@
       <h1 class="manga-title">A GINGA</h1>
       <span class="clan-tag">CLÃ GINGA</span>
     </div>
+
+    <!-- BOTÃO PARA MUDAR O TEMA -->
+    <button id="theme-toggle-btn" class="theme-btn">☀️ Modo Claro</button>
   </header>
 
-  <main class="manga-layout">
-    <div class="page-container" id="swipe-area">
-      <img id="manga-page" class="manga-page" src="" alt="Página do Mangá A Ginga">
-    </div>
-
+  <!-- LAYOUT APENAS COM TEXTO -->
+  <main class="manga-layout" id="swipe-area">
     <aside class="text-panel">
       <h2>TRANSCRIÇÃO DO CAPÍTULO</h2>
       <div id="page-text" class="text-content">
-        <!-- O texto da página aparecerá aqui -->
+        <!-- O texto do capítulo/página aparecerá aqui -->
       </div>
     </aside>
   </main>
