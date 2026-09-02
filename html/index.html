@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   
-  <title>Mangá</title>
+  <title>Mangás</title>
 
-  <!-- FAVICON -->
-  <link rel="icon" type="image/x-icon" href="../favicon.ico">
-  <link rel="icon" type="image/png" href="../favicon-96x96.png">
+  <!-- FAVICON E ÍCONE DA ABA (icon01.png) -->
+  <link rel="icon" type="image/png" href="../images/icon01.png">
+  <link rel="apple-touch-icon" href="../images/icon01.png">
 
   <link rel="stylesheet" href="../css/style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,8 +17,20 @@
 </head>
 <body>
 
+  <!-- TELA DE ABERTURA (SPLASH SCREEN COM ICON02.PNG) -->
+  <div id="splash-screen" class="splash-overlay">
+    <img src="../images/icon02.png" alt="Carregando..." class="splash-image">
+  </div>
+
+  <div id="splash-screen" class="splash-overlay">
+    <picture class="splash-picture">
+      <source media="(max-width: 768px)" srcset="../images/icon03.png">
+      <img src="../images/icon02.png" alt="Carregando..." class="splash-image">
+    </picture>
+  </div>
+
   <!-- TELA 1: LOGIN COM GOOGLE OU VISITANTE -->
-  <div id="welcome-modal" class="modal-overlay">
+  <div id="welcome-modal" class="modal-overlay hidden">
     <div class="modal-box">
       <h2>SEJA BEM-VINDO</h2>
       <p>Escolha como deseja acessar a leitura:</p>
@@ -30,40 +42,46 @@
     </div>
   </div>
 
-  <!-- TELA 2: ABA DE SELEÇÃO DE LIVROS -->
+  <!-- TELA 2: ABA DE SELEÇÃO DE LIVROS (IGUAL AO APLICATIVO) -->
   <div id="continue-modal" class="modal-overlay hidden">
     <div class="modal-box modal-shelf">
-      <h2 id="welcome-user-text">OLÁ!</h2>
-      <p>Qual livro você quer ler?</p>
-      
-      <!-- ESTANTE DE LIVROS -->
-      <div class="books-shelf">
-        
-        <!-- CARD DO LIVRO: A GINGA (CAPA MANTIDA) -->
-        <div class="book-card">
-          <div class="cover-wrapper">
-            <img src="../images/capa-a-ging.jpeg" alt="Capa A Ginga" class="book-cover" onerror="this.src='https://via.placeholder.com/150x220?text=Capa+A+Ginga'">
-          </div>
-          <div class="book-info">
-            <h3>A GINGA</h3>
-            <span class="chapter-tag">Capítulo 1</span>
-            <p id="progress-status">Carregando...</p>
-            <button id="continue-btn" class="ninja-btn">LER AGORA ▶</button>
+      <h1 class="header-title">ESCOLHA SEU MANGÁ</h1>
+
+      <!-- SEÇÃO CONTINUAR LENDO (IGUAL AO APP) -->
+      <div id="continue-reading-section" class="continue-section hidden">
+        <h2 class="section-title">CONTINUAR LENDO 📖</h2>
+        <div class="continue-card">
+          <img src="../images/capa-a-ging.jpeg" alt="Capa A Ginga" class="cover-image-small" onerror="this.src='https://via.placeholder.com/70x100?text=A+Ginga'">
+          <div class="card-info">
+            <h3 class="manga-title">A GINGA</h3>
+            <p id="progress-status" class="progress-text">Parou na Página 1</p>
+            <button id="continue-btn" class="btn-continue">RETOMAR ▶</button>
           </div>
         </div>
-
       </div>
+
+      <!-- SEÇÃO BIBLIOTECA -->
+      <h2 class="section-title">BIBLIOTECA</h2>
+      <div class="books-shelf">
+        <div class="book-card">
+          <img src="../images/capa-a-ging.jpeg" alt="Capa A Ginga" class="cover-image" onerror="this.src='https://via.placeholder.com/90x130?text=A+Ginga'">
+          <div class="card-info">
+            <h3 class="manga-title">A GINGA VOLUME 1</h3>
+            <span class="chapter-tag">Capítulo 1</span>
+            <button id="start-from-beginning-btn" class="btn-start">COMEÇAR DO INÍCIO ▶</button>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
   <!-- LEITOR PRINCIPAL DE MANGÁ -->
-  <header>
+  <header class="reader-header">
+    <button id="back-to-home-btn" class="btn-back">← Início</button>
     <div class="manga-title-wrapper">
       <h1 class="manga-title">A GINGA</h1>
-      <span class="clan-tag">CLÃ GINGA</span>
     </div>
-
-    <!-- BOTÃO PARA MUDAR O TEMA -->
     <button id="theme-toggle-btn" class="theme-btn">☀️ Modo Claro</button>
   </header>
 

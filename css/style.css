@@ -23,6 +23,44 @@ body {
 }
 
 /* ==========================================
+   TELA DE ABERTURA (SPLASH SCREEN RESPONSIVA)
+   ========================================== */
+
+.splash-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #0b0b0d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+  transition: opacity 0.5s ease;
+}
+
+.splash-picture {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.splash-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Preenche a tela mantendo a proporção */
+}
+
+.splash-overlay.hidden {
+  display: none !important;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ==========================================
    SUPORTE AO MODO CLARO (LIGHT MODE)
    ========================================== */
 
@@ -34,7 +72,8 @@ body.light-mode {
 
 body.light-mode .text-panel,
 body.light-mode .modal-box,
-body.light-mode .book-card {
+body.light-mode .book-card,
+body.light-mode .continue-card {
   background-color: #ffffff;
   color: #1a1a1a;
   border-color: #ff6b00;
@@ -47,7 +86,8 @@ body.light-mode .modal-overlay {
 
 body.light-mode .modal-box p,
 body.light-mode .book-info p,
-body.light-mode .text-content {
+body.light-mode .text-content,
+body.light-mode .progress-text {
   color: #2b2b2b;
 }
 
@@ -55,10 +95,6 @@ body.light-mode .scroll-counter {
   background-color: #ffffff;
   border-color: #ff6b00;
   color: #d95300;
-}
-
-body.light-mode .text-panel h2 {
-  border-bottom-color: #ddd;
 }
 
 /* ==========================================
@@ -102,26 +138,132 @@ body.light-mode .text-panel h2 {
   z-index: 10000;
 }
 
-.modal-box h2 {
+.modal-shelf {
+  max-width: 500px;
+  text-align: left;
+}
+
+.header-title {
   font-family: 'Bangers', cursive;
   color: #ff6b00;
   font-size: 2.2rem;
-  margin-bottom: 2px;
+  text-align: center;
+  margin-bottom: 10px;
   letter-spacing: 1.5px;
 }
 
-.modal-box p {
-  color: #ccc;
-  font-size: 1rem;
-  line-height: 1.4;
+.section-title {
+  font-family: 'Bangers', cursive;
+  color: #ffffff;
+  font-size: 1.3rem;
+  margin-top: 10px;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
 }
 
-.modal-actions {
+body.light-mode .section-title {
+  color: #1a1a1a;
+}
+
+/* ==========================================
+   CARDS DE LEITURA (CONTINUAR LENDO E BIBLIOTECA)
+   ========================================== */
+
+.continue-section {
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+.continue-card {
+  background-color: #1a1a24;
+  border: 2px solid #ff6b00;
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(255, 107, 0, 0.2);
+}
+
+.book-card {
+  background-color: #141419;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.cover-image-small {
+  width: 70px;
+  height: 100px;
+  border-radius: 6px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.cover-image {
+  width: 90px;
+  height: 130px;
+  border-radius: 6px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.card-info {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 4px;
+}
+
+.manga-title {
+  font-family: 'Bangers', cursive;
+  color: #ff6b00;
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+}
+
+.progress-text {
+  color: #ccc;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+}
+
+.btn-continue {
+  background-color: #ff6b00;
+  color: #ffffff;
+  border: none;
+  padding: 8px;
+  border-radius: 5px;
+  font-family: 'Bangers', cursive;
+  font-size: 1rem;
+  cursor: pointer;
+  letter-spacing: 1px;
   width: 100%;
-  margin-top: 5px;
+  text-align: center;
+  box-shadow: 2px 2px 0px #000;
+}
+
+.btn-start {
+  background-color: #333;
+  color: #ff6b00;
+  border: none;
+  padding: 8px;
+  border-radius: 5px;
+  font-family: 'Bangers', cursive;
+  font-size: 1rem;
+  cursor: pointer;
+  letter-spacing: 1px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 2px 2px 0px #000;
+}
+
+.btn-continue:hover,
+.btn-start:hover {
+  filter: brightness(1.1);
 }
 
 /* ==========================================
@@ -164,137 +306,32 @@ body.light-mode .text-panel h2 {
   color: #ffffff !important;
 }
 
-body.light-mode .modal-actions button:hover,
-body.light-mode .btn-google:hover,
-body.light-mode .btn-guest:hover {
-  color: #ff6b00 !important;
-}
-
-.modal-actions button:active,
-.btn-google:active,
-.btn-guest:active,
-#save-user-btn:active,
-#guest-btn:active {
-  transform: translate(1px, 1px) !important;
-  box-shadow: 1px 1px 0px #000 !important;
-}
-
-/* ==========================================
-   ESTANTE E CARD DO LIVRO (CAPA MANTIDA)
-   ========================================== */
-
-.books-shelf {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  width: 100%;
-  max-height: 60vh;
-  overflow-y: auto;
-}
-
-.book-card {
-  background-color: #1a1a24;
-  border: 2px solid #2a2a35;
-  border-radius: 10px;
-  padding: 15px;
-  display: flex;
-  gap: 15px;
-  align-items: center;
-  text-align: left;
-  width: 100%;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-}
-
-.cover-wrapper {
-  width: 110px;
-  height: 150px;
-  background-color: #000;
-  border: 2px solid #ff6b00;
-  border-radius: 6px;
-  overflow: hidden;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.book-cover {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.book-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.book-info h3 {
-  font-family: 'Bangers', cursive;
-  color: #ff6b00;
-  font-size: 1.6rem;
-  letter-spacing: 1px;
-}
-
-.chapter-tag {
-  font-size: 0.8rem;
-  background-color: #ff6b00;
-  color: #ffffff;
-  padding: 2px 8px;
-  border-radius: 4px;
-  width: fit-content;
-  font-weight: bold;
-}
-
-.book-info p {
-  color: #aaa;
-  font-size: 0.85rem;
-  margin-bottom: 4px;
-}
-
 /* ==========================================
    LEITOR DE TEXTO PRINCIPAL
    ========================================== */
 
-header {
-  margin-top: 5px;
-  margin-bottom: 10px;
-  text-align: center;
+.reader-header {
+  width: 100%;
+  max-width: 800px;
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  gap: 8px;
+  margin-bottom: 10px;
+  padding: 0 5px;
 }
 
-.manga-title-wrapper {
-  display: inline-block;
-  position: relative;
-}
-
-.manga-title {
+.btn-back {
+  background-color: #ff6b00;
+  color: #ffffff;
+  border: 1.5px solid #000;
+  padding: 6px 12px;
   font-family: 'Bangers', cursive;
-  font-size: 2.8rem;
-  letter-spacing: 3px;
-  color: #ff6b00;
-  text-shadow: 2px 2px 0px #000, -2px -2px 0px #000, 2px -2px 0px #000, -2px 2px 0px #000;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 2px 2px 0px #000;
 }
 
-.clan-tag {
-  font-family: 'Permanent Marker', cursive;
-  background-color: #222;
-  color: #ff6b00;
-  border: 1.5px solid #ff6b00;
-  padding: 1px 8px;
-  font-size: 0.75rem;
-  letter-spacing: 2px;
-  border-radius: 4px;
-  display: inline-block;
-  margin-top: -6px;
-}
-
-/* BOTÃO DE ALTERNAR TEMA */
 .theme-btn {
   background-color: #ff6b00;
   color: #ffffff;
@@ -306,17 +343,6 @@ header {
   border-radius: 20px;
   cursor: pointer;
   box-shadow: 2px 2px 0px #000;
-  transition: all 0.2s ease;
-}
-
-.theme-btn:hover {
-  filter: brightness(1.1);
-  transform: scale(1.03);
-}
-
-.theme-btn:active {
-  transform: translate(1px, 1px);
-  box-shadow: 1px 1px 0px #000;
 }
 
 .manga-layout {
@@ -338,16 +364,6 @@ header {
   max-height: 70vh;
 }
 
-.text-panel h2 {
-  font-family: 'Bangers', cursive;
-  color: #ff6b00;
-  font-size: 1.4rem;
-  letter-spacing: 1px;
-  border-bottom: 1px dashed #444;
-  padding-bottom: 8px;
-  margin-bottom: 12px;
-}
-
 .text-content {
   overflow-y: auto;
   font-size: 1.05rem;
@@ -355,28 +371,6 @@ header {
   color: #dddddd;
   white-space: pre-wrap;
   padding-right: 8px;
-}
-
-/* Scrollbar Personalizada */
-.text-content::-webkit-scrollbar,
-.books-shelf::-webkit-scrollbar {
-  width: 6px;
-}
-
-.text-content::-webkit-scrollbar-track,
-.books-shelf::-webkit-scrollbar-track {
-  background: #141419;
-}
-
-.text-content::-webkit-scrollbar-thumb,
-.books-shelf::-webkit-scrollbar-thumb {
-  background: #ff6b00;
-  border-radius: 4px;
-}
-
-body.light-mode .text-content::-webkit-scrollbar-track,
-body.light-mode .books-shelf::-webkit-scrollbar-track {
-  background: #f5f5f7;
 }
 
 /* CONTROLES */
@@ -407,15 +401,6 @@ body.light-mode .books-shelf::-webkit-scrollbar-track {
   text-align: center;
 }
 
-.ninja-btn:hover {
-  filter: brightness(1.1);
-}
-
-.ninja-btn:active:not(:disabled) {
-  transform: translate(1px, 1px);
-  box-shadow: 1px 1px 0px #000;
-}
-
 .ninja-btn:disabled {
   background: #333;
   color: #666;
@@ -433,11 +418,4 @@ body.light-mode .books-shelf::-webkit-scrollbar-track {
   color: #ff8533;
   font-size: 0.9rem;
   white-space: nowrap;
-}
-
-/* RESPONSIVIDADE (MOBILE) */
-@media (max-width: 768px) {
-  .text-panel {
-    min-height: 55vh;
-  }
 }

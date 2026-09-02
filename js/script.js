@@ -173,6 +173,20 @@ const continueModal = document.getElementById("continue-modal");
 const googleLoginBtn = document.getElementById("save-user-btn");
 const guestBtn = document.getElementById("guest-btn");
 
+const continueSection = document.getElementById("continue-reading-section");
+const startFromBeginningBtn = document.getElementById("start-from-beginning-btn");
+const backToHomeBtn = document.getElementById("back-to-home-btn");
+
+// CONTROLAR SPLASH SCREEN (TELA DE ABERTURA)
+window.addEventListener('DOMContentLoaded', () => {
+  const splash = document.getElementById('splash-screen');
+  setTimeout(() => {
+    if (splash) {
+      splash.classList.add('hidden');
+    }
+  }, 2000);
+});
+
 if (totalPagesElement) {
   totalPagesElement.textContent = TOTAL_PAGINAS;
 }
@@ -184,6 +198,34 @@ function obterOuCriarIdDispositivo() {
     localStorage.setItem("leitor_device_id", deviceId);
   }
   return deviceId;
+}
+
+// ATUALIZAR INTERFACE DA TELA DE SELEÇÃO
+function atualizarInterfaceSelecao(paginaSalva) {
+  const continueBtn = document.getElementById("continue-btn");
+  const cap1Status = document.getElementById("progress-status");
+
+  if (paginaSalva > 1) {
+    if (continueSection) continueSection.classList.remove("hidden");
+    if (cap1Status) cap1Status.textContent = `Parou na Página ${paginaSalva}`;
+    if (continueBtn) {
+      continueBtn.onclick = () => abrirLeitor(paginaSalva - 1);
+    }
+  } else {
+    if (continueSection) continueSection.classList.add("hidden");
+  }
+}
+
+// BOTAO COMEÇAR DO INÍCIO
+if (startFromBeginningBtn) {
+  startFromBeginningBtn.onclick = () => abrirLeitor(0);
+}
+
+// BOTAO VOLTAR PARA A SELEÇÃO
+if (backToHomeBtn) {
+  backToHomeBtn.onclick = () => {
+    if (continueModal) continueModal.classList.remove("hidden");
+  };
 }
 
 // LOGIN GOOGLE
@@ -212,17 +254,7 @@ if (guestBtn) {
     const deviceId = obterOuCriarIdDispositivo();
     const paginaSalvaLocal = parseInt(localStorage.getItem(`pagina_${deviceId}`)) || 1;
 
-    const userText = document.getElementById("welcome-user-text");
-    if (userText) userText.textContent = "OLÁ, VISITANTE!";
-
-    const continueBtnCap1 = document.getElementById("continue-btn");
-    if (continueBtnCap1) {
-      continueBtnCap1.textContent = paginaSalvaLocal > 1 ? "CONTINUAR LENDO ▶" : "COMEÇAR LEITURA ▶";
-      continueBtnCap1.onclick = () => abrirLeitor(paginaSalvaLocal - 1);
-    }
-
-    const cap1Status = document.getElementById("progress-status");
-    if (cap1Status) cap1Status.textContent = `Página ${paginaSalvaLocal} de ${TOTAL_PAGINAS}`;
+    atualizarInterfaceSelecao(paginaSalvaLocal);
 
     if (continueModal) continueModal.classList.remove("hidden");
   };
@@ -258,19 +290,7 @@ if (typeof auth !== "undefined") {
         }
       }
 
-      const userText = document.getElementById("welcome-user-text");
-      if (userText) {
-        userText.textContent = `OLÁ, ${user.displayName ? user.displayName.toUpperCase() : 'LEITOR'}!`;
-      }
-
-      const continueBtnCap1 = document.getElementById("continue-btn");
-      if (continueBtnCap1) {
-        continueBtnCap1.textContent = paginaSalva > 1 ? "CONTINUAR LENDO ▶" : "COMEÇAR LEITURA ▶";
-        continueBtnCap1.onclick = () => abrirLeitor(paginaSalva - 1);
-      }
-
-      const cap1Status = document.getElementById("progress-status");
-      if (cap1Status) cap1Status.textContent = `Página ${paginaSalva} de ${TOTAL_PAGINAS}`;
+      atualizarInterfaceSelecao(paginaSalva);
 
       if (continueModal) continueModal.classList.remove("hidden");
 
