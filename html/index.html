@@ -17,7 +17,7 @@
 </head>
 <body>
 
-  <!-- TELA DE ABERTURA RESPONSIVA (ICON03 NO CELULAR / ICON02 NO PC) -->
+  <!-- TELA DE ABERTURA RESPONSIVA -->
   <div id="splash-screen" class="splash-overlay">
     <picture class="splash-picture">
       <source media="(max-width: 768px)" srcset="../images/icon03.png">
@@ -43,7 +43,7 @@
     <div class="modal-box modal-shelf">
       <h1 class="header-title">ESCOLHA SEU MANGÁS</h1>
 
-      <!-- SEÇÃO CONTINUAR LENDO (COM DIV CONTAINER PARA ALINHAMENTO CORRETO) -->
+      <!-- SEÇÃO CONTINUAR LENDO -->
       <div id="continue-reading-section" class="continue-section hidden">
         <h2 class="section-title">CONTINUAR LENDO 📖</h2>
         <div class="continue-list">
@@ -80,15 +80,26 @@
     <div class="manga-title-wrapper">
       <h1 class="manga-title">A GINGA</h1>
     </div>
-    <button id="theme-toggle-btn" class="theme-btn">☀️ Modo Claro</button>
+    
+    <!-- GRUPO DE BOTÕES DE AÇÃO NO CABEÇALHO -->
+    <div class="header-actions">
+      <button id="toggle-media-btn" class="theme-btn">🖼️ Imagem</button>
+      <button id="theme-toggle-btn" class="theme-btn">☀️ Modo Claro</button>
+    </div>
   </header>
 
-  <!-- LAYOUT APENAS COM TEXTO -->
+  <!-- LAYOUT DE LEITURA (TEXTO OU IMAGEM) -->
   <main class="manga-layout" id="swipe-area">
     <aside class="text-panel">
-      <h2>TRANSCRIÇÃO DO CAPÍTULO</h2>
+      
+      <!-- CONTÊINER DO TEXTO -->
       <div id="page-text" class="text-content">
         <!-- O texto do capítulo/página aparecerá aqui -->
+      </div>
+
+      <!-- CONTÊINER DA IMAGEM (Inicia oculto) -->
+      <div id="page-image-wrapper" class="image-content hidden">
+        <img id="page-image" src="" alt="Imagem da página">
       </div>
     </aside>
   </main>

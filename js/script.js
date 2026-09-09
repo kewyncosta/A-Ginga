@@ -1,6 +1,3 @@
-const TOTAL_PAGINAS = 256;
-
-// Configuração do Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyAplepZYqvND7QCwuxn6HQu1g5PALNbYIY",
   authDomain: "manga-28112026.firebaseapp.com",
@@ -17,6 +14,9 @@ if (typeof firebase !== "undefined") {
 }
 const auth = typeof firebase !== "undefined" ? firebase.auth() : null;
 const db = typeof firebase !== "undefined" ? firebase.firestore() : null;
+
+// Total de páginas do capítulo/mangá
+const TOTAL_PAGINAS = 256; // Altere para o total real de páginas do seu mangá
 
 // Objeto reservado para transcrever o texto de cada página
 const textosPaginas = {
@@ -281,11 +281,16 @@ const textosPaginas = {
 let usuarioAtual = null;
 let modoVisitante = false;
 let indiceAtual = 0;
+let isImageMode = false; // Controle de exibição (Texto ou Imagem)
 
 // Referências de Elementos HTML
 const pageNumElement = document.getElementById("page-num");
 const totalPagesElement = document.getElementById("total-pages");
 const pageTextElement = document.getElementById("page-text");
+const pageImageWrapper = document.getElementById("page-image-wrapper");
+const pageImageElement = document.getElementById("page-image");
+const toggleMediaBtn = document.getElementById("toggle-media-btn");
+
 const prevBtn = document.getElementById("prev-btn");
 const nextBtn = document.getElementById("next-btn");
 const swipeArea = document.getElementById("swipe-area");
@@ -338,12 +343,12 @@ function atualizarInterfaceSelecao(paginaSalva) {
   }
 }
 
-// BOTAO COMEÇAR DO INÍCIO
+// BOTÃO COMEÇAR DO INÍCIO
 if (startFromBeginningBtn) {
   startFromBeginningBtn.onclick = () => abrirLeitor(0);
 }
 
-// BOTAO VOLTAR PARA A SELEÇÃO
+// BOTÃO VOLTAR PARA A SELEÇÃO
 if (backToHomeBtn) {
   backToHomeBtn.onclick = () => {
     if (continueModal) continueModal.classList.remove("hidden");
@@ -442,16 +447,42 @@ function salvarProgressoAutomatico(numeroPagina) {
   }
 }
 
-// ATUALIZAR INTERFACE
+// ALTERNAR ENTRE MODO TEXTO E MODO IMAGEM
+if (toggleMediaBtn) {
+  toggleMediaBtn.addEventListener("click", () => {
+    isImageMode = !isImageMode;
+
+    if (isImageMode) {
+      toggleMediaBtn.textContent = "📄 Texto";
+      if (pageTextElement) pageTextElement.classList.add("hidden");
+      if (pageImageWrapper) pageImageWrapper.classList.remove("hidden");
+    } else {
+      toggleMediaBtn.textContent = "🖼️ Imagem";
+      if (pageTextElement) pageTextElement.classList.remove("hidden");
+      if (pageImageWrapper) pageImageWrapper.classList.add("hidden");
+    }
+  });
+}
+
+// ATUALIZAR INTERFACE DO LEITOR
 function atualizarPagina() {
   const numeroPaginaAtual = indiceAtual + 1;
 
   if (pageNumElement) pageNumElement.textContent = numeroPaginaAtual;
 
+  // Atualiza Texto
   if (pageTextElement) {
     pageTextElement.innerText = (typeof textosPaginas !== "undefined" && textosPaginas[numeroPaginaAtual]) 
       ? textosPaginas[numeroPaginaAtual] 
       : "Sem texto para esta página.";
+  }
+
+// Atualiza Imagem (buscando direto da pasta ../images/pagina_X.png)
+  if (pageImageElement) {
+    pageImageElement.src = `../images/pagina${numeroPaginaAtual}.png`;
+    pageImageElement.onerror = () => {
+      pageImageElement.src = 'https://via.placeholder.com/400x600?text=Imagem+nao+encontrada';
+    };
   }
 
   // Atualiza botões
