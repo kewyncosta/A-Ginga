@@ -15,11 +15,17 @@ if (typeof firebase !== "undefined") {
 const auth = typeof firebase !== "undefined" ? firebase.auth() : null;
 const db = typeof firebase !== "undefined" ? firebase.firestore() : null;
 
-// Total de páginas do capítulo/mangá
-const TOTAL_PAGINAS = 468; // Altere para o total real de páginas do seu mangá
-
-// Objeto reservado para transcrever o texto de cada página
-const textosPaginas = {
+/* ============================================================
+   BIBLIOTECA DE MANGÁS
+   ============================================================ */
+const biblioteca = {
+  jinga1: {
+    id: "jinga1",
+    titulo: "A GINGA - VOL. 1",
+    capa: "../images/capa_v1.png",
+    pastaImagens: "../images/v1",
+    totalPaginas: 468,
+    textos: {
   1: "Página 1:\n• Capítulo 1 — A Ginga Começa\nMuito antes de Kewyn se tornar conhecido como um dos mais habilidosos ninjas do Clã Ginga, ele era apenas uma criança.\nUm garoto curioso, inquieto e que nunca conseguia ficar parado.\nEle vivia na Vila da Ginga, uma pequena vila ninja escondida entre enormes montanhas e uma floresta cheia de rios.\nDiferente das outras vilas, a Vila da Ginga tinha uma tradição que fazia parte da vida de todos os seus habitantes:\na capoeira.\nPara os membros do Clã Ginga, capoeira não era apenas uma dança.\nEra uma arte de combate.\nEra uma maneira de se movimentar.\nEra uma forma de pensar.\nDesde pequenos, os membros do clã aprendiam a gingar antes mesmo de aprenderem a controlar completamente o chakra.\nA primeira lição era simples:\n\"Não fique parado diante do perigo.\"",
   2: "Página 2:\n• O pequeno Kewyn\nKewyn tinha oito anos.\nNaquela época, seus dois olhos eram completamente normais, castanhos, e ele ainda não havia despertado o verdadeiro poder de sua linhagem.\nEle treinava todos os dias com outras crianças do clã.\nEnquanto algumas crianças preferiam treinar kunais e shurikens, Kewyn gostava mesmo era de lutar usando as pernas.\n— Você nunca vai aprender a lutar direito desse jeito! — reclamou um garoto depois de cair no chão.\nKewyn abriu um sorriso.\n— Mas eu ganhei.\n— Você trapaceou!\n— Capoeira não é trapaça.\nKewyn entrou novamente na posição de ginga.\nO garoto avançou.\nKewyn desviou para o lado, colocou uma das mãos no chão e passou as pernas por cima do adversário.\nO menino perdeu o equilíbrio e caiu novamente.\nAs outras crianças começaram a rir.\n— De novo! — gritou Kewyn.",
   3: "Página 3:\nFoi naquele momento que um dos professores apareceu.\n— Kewyn.\nO garoto parou.\n— Sim, professor?\n— Você é rápido.\nTem equilíbrio e sabe observar seus adversários.\nKewyn sorriu.\n— Então eu sou bom?\nO professor cruzou os braços.\n— Não.\nO sorriso desapareceu.\n— Ainda não.\nKewyn ficou determinado.\n— Então eu vou ficar bom.\nO professor sorriu discretamente.\n— É isso que eu queria ouvir.",
@@ -508,12 +514,23 @@ const textosPaginas = {
   466: "Página 466:\nKewyn olhou para ela.\n— Como sabe?\n— Porque você sempre tenta proteger a gente.\nRodrigo, alguns passos atrás, ouviu.\n— E porque agora somos quatro.\nNicolas levantou o punho.\n— Sempre quatro!\nKewyn sorriu.\n— Sempre quatro.\nJairo observava os quatro em silêncio.\nMas sabia que havia algo ainda maior acontecendo.\nO despertar do Byakugan tinha sido apenas o começo.\nEm algum lugar distante...",
   467: "Página 467:\nRaiden chegou a uma sala escura.\nUma figura estava sentada em um trono.\nRaiden ajoelhou.\n— O terceiro fragmento despertou.\nA figura perguntou:\n— E o quarto?\nRaiden respondeu:\n— Também.\nA figura ficou em silêncio.\n— Então os quatro estão reunidos.\nRaiden levantou a cabeça.\n— Ainda não.\n— O que falta?\nRaiden sorriu.\n— O quinto caminho.\nA figura levantou lentamente.\n— Então encontre-o.",
   468: "Página 468:\nRaiden respondeu:\n— Já sei onde procurar.\nA cena terminou com uma imagem da Vila da Ginga.\nE, no centro dela...\numa antiga porta subterrânea começou a se abrir sozinha.\nCLIC.\n\nContinua...\n\nFim do Capítulo 33 — O Despertar do Byakugan.",
+}
+  },
+  jinga2: {
+    id: "jinga2",
+    titulo: "A GINGA - VOL. 2",
+    capa: "../images/capa_v2.png",
+    pastaImagens: "../images/v2",
+    totalPaginas: 300,
+    textos: {}
+  }
 };
 
+let mangaAtualId = "jinga1";
 let usuarioAtual = null;
 let modoVisitante = false;
 let indiceAtual = 0;
-let isImageMode = false; // Controle de exibição (Texto ou Imagem)
+let isImageMode = false;
 
 // Referências de Elementos HTML
 const pageNumElement = document.getElementById("page-num");
@@ -522,6 +539,7 @@ const pageTextElement = document.getElementById("page-text");
 const pageImageWrapper = document.getElementById("page-image-wrapper");
 const pageImageElement = document.getElementById("page-image");
 const toggleMediaBtn = document.getElementById("toggle-media-btn");
+const readerMangaTitle = document.getElementById("reader-manga-title");
 
 const prevBtn = document.getElementById("prev-btn");
 const nextBtn = document.getElementById("next-btn");
@@ -533,22 +551,15 @@ const googleLoginBtn = document.getElementById("save-user-btn");
 const guestBtn = document.getElementById("guest-btn");
 
 const continueSection = document.getElementById("continue-reading-section");
-const startFromBeginningBtn = document.getElementById("start-from-beginning-btn");
 const backToHomeBtn = document.getElementById("back-to-home-btn");
 
-// CONTROLAR SPLASH SCREEN (TELA DE ABERTURA)
+// SPLASH SCREEN
 window.addEventListener('DOMContentLoaded', () => {
   const splash = document.getElementById('splash-screen');
   setTimeout(() => {
-    if (splash) {
-      splash.classList.add('hidden');
-    }
+    if (splash) splash.classList.add('hidden');
   }, 2000);
 });
-
-if (totalPagesElement) {
-  totalPagesElement.textContent = TOTAL_PAGINAS;
-}
 
 function obterOuCriarIdDispositivo() {
   let deviceId = localStorage.getItem("leitor_device_id");
@@ -559,28 +570,67 @@ function obterOuCriarIdDispositivo() {
   return deviceId;
 }
 
-// ATUALIZAR INTERFACE DA TELA DE SELEÇÃO
-function atualizarInterfaceSelecao(paginaSalva) {
-  const continueBtn = document.getElementById("continue-btn");
-  const cap1Status = document.getElementById("progress-status");
-
-  if (paginaSalva > 1) {
-    if (continueSection) continueSection.classList.remove("hidden");
-    if (cap1Status) cap1Status.textContent = `Parou na Página ${paginaSalva}`;
-    if (continueBtn) {
-      continueBtn.onclick = () => abrirLeitor(paginaSalva - 1);
-    }
-  } else {
-    if (continueSection) continueSection.classList.add("hidden");
+// SELEÇÃO DE MANGÁ
+function selecionarManga(chaveManga) {
+  if (biblioteca[chaveManga]) {
+    mangaAtualId = chaveManga;
+    abrirLeitor(0);
   }
 }
 
-// BOTÃO COMEÇAR DO INÍCIO
-if (startFromBeginningBtn) {
-  startFromBeginningBtn.onclick = () => abrirLeitor(0);
+// ATUALIZAR INTERFACE DA TELA DE SELEÇÃO (EXIBE TODOS OS VOLUMES EM ANDAMENTO)
+function atualizarInterfaceSelecao(progressoGeral) {
+  const continueList = document.querySelector(".continue-list");
+
+  if (!progressoGeral || typeof progressoGeral !== "object") {
+    if (continueSection) continueSection.classList.add("hidden");
+    return;
+  }
+
+  // Filtra volumes válidos com progresso salvo (página > 1)
+  const volumesLidos = Object.keys(progressoGeral).filter(key => {
+    const p = progressoGeral[key];
+    return p && p.pagina > 1 && biblioteca[key];
+  });
+
+  if (volumesLidos.length === 0) {
+    if (continueSection) continueSection.classList.add("hidden");
+    return;
+  }
+
+  if (continueSection) continueSection.classList.remove("hidden");
+
+  // Renderiza um card individual para cada volume lido
+  if (continueList) {
+    continueList.innerHTML = "";
+
+    volumesLidos.forEach(chaveManga => {
+      const prog = progressoGeral[chaveManga];
+      const manga = biblioteca[chaveManga];
+
+      const card = document.createElement("div");
+      card.className = "continue-card";
+      card.innerHTML = `
+        <img src="${manga.capa}" class="cover-image-small" alt="${manga.titulo}">
+        <div class="card-info">
+          <h3 class="manga-title">${manga.titulo}</h3>
+          <p class="progress-text">Parou na Página ${prog.pagina}</p>
+          <button class="btn-continue">RETOMAR ▶</button>
+        </div>
+      `;
+
+      const btn = card.querySelector(".btn-continue");
+      btn.onclick = () => {
+        mangaAtualId = chaveManga;
+        abrirLeitor(prog.pagina - 1);
+      };
+
+      continueList.appendChild(card);
+    });
+  }
 }
 
-// BOTÃO VOLTAR PARA A SELEÇÃO
+// BOTÃO VOLTAR
 if (backToHomeBtn) {
   backToHomeBtn.onclick = () => {
     if (continueModal) continueModal.classList.remove("hidden");
@@ -603,7 +653,7 @@ if (googleLoginBtn && typeof auth !== "undefined") {
   };
 }
 
-// ENTRAR COMO VISITANTE
+// VISITANTE
 if (guestBtn) {
   guestBtn.onclick = function (e) {
     e.preventDefault();
@@ -611,15 +661,15 @@ if (guestBtn) {
     if (welcomeModal) welcomeModal.classList.add("hidden");
 
     const deviceId = obterOuCriarIdDispositivo();
-    const paginaSalvaLocal = parseInt(localStorage.getItem(`pagina_${deviceId}`)) || 1;
+    const progressoLocal = JSON.parse(localStorage.getItem(`progresso_${deviceId}`)) || {};
 
-    atualizarInterfaceSelecao(paginaSalvaLocal);
+    atualizarInterfaceSelecao(progressoLocal);
 
     if (continueModal) continueModal.classList.remove("hidden");
   };
 }
 
-// MONITOR DO FIREBASE AUTH
+// FIREBASE AUTH MONITOR
 if (typeof auth !== "undefined") {
   auth.onAuthStateChanged(async (user) => {
     if (user) {
@@ -628,7 +678,7 @@ if (typeof auth !== "undefined") {
 
       if (welcomeModal) welcomeModal.classList.add("hidden");
 
-      let paginaSalva = 1;
+      let progressoGeral = {};
 
       if (typeof db !== "undefined") {
         try {
@@ -636,12 +686,12 @@ if (typeof auth !== "undefined") {
           const userDoc = await userRef.get();
 
           if (userDoc.exists) {
-            paginaSalva = userDoc.data().paginaAtual || 1;
+            progressoGeral = userDoc.data().ultimoProgresso || {};
           } else {
             await userRef.set({
               nome: user.displayName || "Leitor",
               email: user.email || "",
-              paginaAtual: 1
+              ultimoProgresso: {}
             });
           }
         } catch (err) {
@@ -649,7 +699,7 @@ if (typeof auth !== "undefined") {
         }
       }
 
-      atualizarInterfaceSelecao(paginaSalva);
+      atualizarInterfaceSelecao(progressoGeral);
 
       if (continueModal) continueModal.classList.remove("hidden");
 
@@ -667,19 +717,30 @@ function abrirLeitor(indicePagina) {
   atualizarPagina();
 }
 
-// SALVAR PROGRESSO
+// SALVAR PROGRESSO AUTOMÁTICO (ISOLADO POR VOLUME)
 function salvarProgressoAutomatico(numeroPagina) {
+  const chaveVolume = mangaAtualId;
+  const dadosVolume = {
+    mangaId: mangaAtualId,
+    pagina: numeroPagina
+  };
+
   if (usuarioAtual && !modoVisitante && typeof db !== "undefined") {
     db.collection("leitores").doc(usuarioAtual.uid).set({
-      paginaAtual: numeroPagina
+      ultimoProgresso: {
+        [chaveVolume]: dadosVolume
+      }
     }, { merge: true }).catch(err => console.error("Erro ao salvar progresso:", err));
   } else {
     const deviceId = obterOuCriarIdDispositivo();
-    localStorage.setItem(`pagina_${deviceId}`, numeroPagina);
+    const progressoLocal = JSON.parse(localStorage.getItem(`progresso_${deviceId}`)) || {};
+    
+    progressoLocal[chaveVolume] = dadosVolume;
+    localStorage.setItem(`progresso_${deviceId}`, JSON.stringify(progressoLocal));
   }
 }
 
-// ALTERNAR ENTRE MODO TEXTO E MODO IMAGEM
+// MODO TEXTO E MODO IMAGEM
 if (toggleMediaBtn) {
   toggleMediaBtn.addEventListener("click", () => {
     isImageMode = !isImageMode;
@@ -698,36 +759,37 @@ if (toggleMediaBtn) {
 
 // ATUALIZAR INTERFACE DO LEITOR
 function atualizarPagina() {
+  const manga = biblioteca[mangaAtualId];
   const numeroPaginaAtual = indiceAtual + 1;
 
+  if (readerMangaTitle) readerMangaTitle.textContent = manga.titulo;
   if (pageNumElement) pageNumElement.textContent = numeroPaginaAtual;
+  if (totalPagesElement) totalPagesElement.textContent = manga.totalPaginas;
 
-  // Atualiza Texto
   if (pageTextElement) {
-    pageTextElement.innerText = (typeof textosPaginas !== "undefined" && textosPaginas[numeroPaginaAtual]) 
-      ? textosPaginas[numeroPaginaAtual] 
+    pageTextElement.innerText = (manga.textos && manga.textos[numeroPaginaAtual]) 
+      ? manga.textos[numeroPaginaAtual] 
       : "Sem texto para esta página.";
   }
 
-// Atualiza Imagem (buscando direto da pasta ../images/pagina_X.png)
   if (pageImageElement) {
-    pageImageElement.src = `../images/pagina${numeroPaginaAtual}.png`;
+    pageImageElement.src = `${manga.pastaImagens}/pagina_${numeroPaginaAtual}.png`;
     pageImageElement.onerror = () => {
       pageImageElement.src = 'https://via.placeholder.com/400x600?text=Imagem+nao+encontrada';
     };
   }
 
-  // Atualiza botões
   if (nextBtn) nextBtn.disabled = indiceAtual === 0;
-  if (prevBtn) prevBtn.disabled = indiceAtual === TOTAL_PAGINAS - 1;
+  if (prevBtn) prevBtn.disabled = indiceAtual === manga.totalPaginas - 1;
 
   salvarProgressoAutomatico(numeroPaginaAtual);
 }
 
-// BOTÕES DE NAVEGAÇÃO
+// NAVEGAÇÃO DOS BOTÕES
 if (prevBtn) {
   prevBtn.addEventListener("click", () => {
-    if (indiceAtual < TOTAL_PAGINAS - 1) {
+    const manga = biblioteca[mangaAtualId];
+    if (indiceAtual < manga.totalPaginas - 1) {
       indiceAtual++;
       atualizarPagina();
     }
@@ -749,7 +811,7 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "ArrowRight" && prevBtn) prevBtn.click();
 });
 
-// GESTOS DE SWIPE (TOUCH)
+// SWIPE (TOUCH)
 let touchStartX = 0;
 let touchEndX = 0;
 
@@ -765,7 +827,7 @@ if (swipeArea) {
   }, false);
 }
 
-// ALTERNAR ENTRE MODO CLARO E MODO ESCURO
+// MODO CLARO / ESCURO
 const themeToggleBtn = document.getElementById('theme-toggle-btn');
 
 if (themeToggleBtn) {
