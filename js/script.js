@@ -521,7 +521,7 @@ const biblioteca = {
     titulo: "A GINGA - VOL. 2",
     capa: "../images/capa_v2.png",
     pastaImagens: "../images/v2",
-    totalPaginas: 300,
+    totalPaginas:0,
     textos: {}
   }
 };
@@ -578,7 +578,7 @@ function selecionarManga(chaveManga) {
   }
 }
 
-// ATUALIZAR INTERFACE DA TELA DE SELEÇÃO (EXIBE TODOS OS VOLUMES EM ANDAMENTO)
+// ATUALIZAR INTERFACE DA TELA DE SELEÇÃO (CONTINUAR LENDO)
 function atualizarInterfaceSelecao(progressoGeral) {
   const continueList = document.querySelector(".continue-list");
 
@@ -587,10 +587,11 @@ function atualizarInterfaceSelecao(progressoGeral) {
     return;
   }
 
-  // Filtra volumes válidos com progresso salvo (página > 1)
+  // Filtra apenas volumes onde a página salva é menor que o total atual
   const volumesLidos = Object.keys(progressoGeral).filter(key => {
     const p = progressoGeral[key];
-    return p && p.pagina > 1 && biblioteca[key];
+    const manga = biblioteca[key];
+    return p && p.pagina > 1 && manga && p.pagina < manga.totalPaginas;
   });
 
   if (volumesLidos.length === 0) {
@@ -600,7 +601,6 @@ function atualizarInterfaceSelecao(progressoGeral) {
 
   if (continueSection) continueSection.classList.remove("hidden");
 
-  // Renderiza um card individual para cada volume lido
   if (continueList) {
     continueList.innerHTML = "";
 
@@ -717,25 +717,31 @@ function abrirLeitor(indicePagina) {
   atualizarPagina();
 }
 
-// SALVAR PROGRESSO AUTOMÁTICO (ISOLADO POR VOLUME)
+// SALVAR PROGRESSO AUTOMÁTICO (SEMPRE SALVA A PÁGINA ONDE PAROU)
 function salvarProgressoAutomatico(numeroPagina) {
   const chaveVolume = mangaAtualId;
-  const dadosVolume = {
-    mangaId: mangaAtualId,
-    pagina: numeroPagina
-  };
 
   if (usuarioAtual && !modoVisitante && typeof db !== "undefined") {
-    db.collection("leitores").doc(usuarioAtual.uid).set({
+    const userRef = db.collection("leitores").doc(usuarioAtual.uid);
+
+    userRef.set({
       ultimoProgresso: {
-        [chaveVolume]: dadosVolume
+        [chaveVolume]: {
+          mangaId: mangaAtualId,
+          pagina: numeroPagina
+        }
       }
     }, { merge: true }).catch(err => console.error("Erro ao salvar progresso:", err));
+
   } else {
     const deviceId = obterOuCriarIdDispositivo();
     const progressoLocal = JSON.parse(localStorage.getItem(`progresso_${deviceId}`)) || {};
-    
-    progressoLocal[chaveVolume] = dadosVolume;
+
+    progressoLocal[chaveVolume] = {
+      mangaId: mangaAtualId,
+      pagina: numeroPagina
+    };
+
     localStorage.setItem(`progresso_${deviceId}`, JSON.stringify(progressoLocal));
   }
 }
@@ -773,7 +779,7 @@ function atualizarPagina() {
   }
 
   if (pageImageElement) {
-    pageImageElement.src = `${manga.pastaImagens}/pagina_${numeroPaginaAtual}.png`;
+    pageImageElement.src = `${manga.pastaImagens}/pagina${numeroPaginaAtual}.png`;
     pageImageElement.onerror = () => {
       pageImageElement.src = 'https://via.placeholder.com/400x600?text=Imagem+nao+encontrada';
     };
